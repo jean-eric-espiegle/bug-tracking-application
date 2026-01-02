@@ -7,7 +7,7 @@ import jakarta.persistence.Table;
 @Table(name = "support_users")
 public class Support extends User {
 
-    private String department; // optional field for support team assignment
+    private String department;
 
     public Support() {
     }

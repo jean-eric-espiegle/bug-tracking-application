@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED) // Each subclass will have its own table
+@Inheritance(strategy = InheritanceType.JOINED) // each subclass has its own table
 @Table(name = "users")
 public abstract class User {
 
@@ -14,11 +14,11 @@ public abstract class User {
 
     private String username;
     private String email;
-    private String password; // hashed in real apps
+    private String password; // store hashed password in real apps
 
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    // Getters and setters
+    // Getters and Setters
     public Long getId() {
         return id;
     }
