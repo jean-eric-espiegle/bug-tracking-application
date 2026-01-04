@@ -4,27 +4,27 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED) // each subclass has its own table
 @Table(name = "users")
-public abstract class User {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String username;
+
     private String email;
-    private String password; // store hashed password in real apps
+
+    private String password;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    // Getters and Setters
+    // Getters / setters
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getUsername() {
@@ -49,6 +49,14 @@ public abstract class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     public LocalDateTime getCreatedAt() {

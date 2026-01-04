@@ -1,0 +1,11 @@
+/Users/jean.eric/Documents/PrivateProjects/bug-tracking-application/src/main/java/com/jean_eric_espiegle/bug_tracking_application/security/JwtUtil.java
+/Users/jean.eric/Documents/PrivateProjects/bug-tracking-application/src/main/java/com/jean_eric_espiegle/bug_tracking_application/model/User.java
+/Users/jean.eric/Documents/PrivateProjects/bug-tracking-application/src/main/java/com/jean_eric_espiegle/bug_tracking_application/security/CustomUserDetailsService.java
+/Users/jean.eric/Documents/PrivateProjects/bug-tracking-application/src/main/java/com/jean_eric_espiegle/bug_tracking_application/security/JwtResponse.java
+/Users/jean.eric/Documents/PrivateProjects/bug-tracking-application/src/main/java/com/jean_eric_espiegle/bug_tracking_application/model/Role.java
+/Users/jean.eric/Documents/PrivateProjects/bug-tracking-application/src/main/java/com/jean_eric_espiegle/bug_tracking_application/security/SecurityConfig.java
+/Users/jean.eric/Documents/PrivateProjects/bug-tracking-application/src/main/java/com/jean_eric_espiegle/bug_tracking_application/repository/UserRepository.java
+/Users/jean.eric/Documents/PrivateProjects/bug-tracking-application/src/main/java/com/jean_eric_espiegle/bug_tracking_application/security/JwtAuthenticationFilter.java
+/Users/jean.eric/Documents/PrivateProjects/bug-tracking-application/src/main/java/com/jean_eric_espiegle/bug_tracking_application/controller/AuthController.java
+/Users/jean.eric/Documents/PrivateProjects/bug-tracking-application/src/main/java/com/jean_eric_espiegle/bug_tracking_application/BugTrackingApplication.java
+/Users/jean.eric/Documents/PrivateProjects/bug-tracking-application/src/main/java/com/jean_eric_espiegle/bug_tracking_application/security/JwtRequest.java

@@ -6,8 +6,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class BugTrackingApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
-
+    @Test
+    void contextLoads() {
+        // just checks if Spring Boot starts successfully
+    }
 }
