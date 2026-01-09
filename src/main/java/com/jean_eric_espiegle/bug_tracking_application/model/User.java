@@ -12,9 +12,7 @@ public class User {
     private Long id;
 
     private String username;
-
     private String email;
-
     private String password;
 
     @Enumerated(EnumType.STRING)
@@ -22,7 +20,12 @@ public class User {
 
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    // Getters / setters
+    // --- NEW: link user to organization ---
+    @ManyToOne
+    @JoinColumn(name = "organization_id")
+    private Organization organization;
+
+    // --- getters / setters ---
     public Long getId() {
         return id;
     }
@@ -65,5 +68,14 @@ public class User {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    // --- NEW getters / setters for organization ---
+    public Organization getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
     }
 }

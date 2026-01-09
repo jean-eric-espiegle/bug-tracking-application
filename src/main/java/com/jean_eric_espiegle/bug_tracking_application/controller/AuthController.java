@@ -1,16 +1,17 @@
 package com.jean_eric_espiegle.bug_tracking_application.controller;
 
+import com.jean_eric_espiegle.bug_tracking_application.dto.RegisterRequest;
+import com.jean_eric_espiegle.bug_tracking_application.dto.RegisterResponse;
 import com.jean_eric_espiegle.bug_tracking_application.model.User;
 import com.jean_eric_espiegle.bug_tracking_application.repository.UserRepository;
 import com.jean_eric_espiegle.bug_tracking_application.security.JwtRequest;
 import com.jean_eric_espiegle.bug_tracking_application.security.JwtResponse;
 import com.jean_eric_espiegle.bug_tracking_application.security.JwtUtil;
+import com.jean_eric_espiegle.bug_tracking_application.service.UserRegistrationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,28 +20,28 @@ public class AuthController {
 
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+    private final UserRegistrationService registrationService;
 
-    public AuthController(AuthenticationManager authenticationManager,
+    public AuthController(
+            AuthenticationManager authenticationManager,
             UserRepository userRepository,
-            PasswordEncoder passwordEncoder,
-            JwtUtil jwtUtil) {
+            JwtUtil jwtUtil,
+            UserRegistrationService registrationService) {
+
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
+        this.registrationService = registrationService;
     }
 
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> login(@RequestBody JwtRequest request) {
         try {
-            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-            System.out.println(encoder.encode("password123"));
-            System.out.println("Username: " + request.username());
-            System.out.println("Password: " + request.password());
             authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(request.username(), request.password()));
+                    new UsernamePasswordAuthenticationToken(
+                            request.username(),
+                            request.password()));
         } catch (BadCredentialsException e) {
             return ResponseEntity.status(401).build();
         }
@@ -48,8 +49,19 @@ public class AuthController {
         User user = userRepository.findByUsername(request.username())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        String token = jwtUtil.generateToken(user.getUsername(), user.getRole().name());
-        // For now, we won’t implement refresh token
-        return ResponseEntity.ok(new JwtResponse(token, "dummy-refresh-token"));
+        String token = jwtUtil.generateToken(
+                user.getUsername(),
+                user.getRole().name());
+
+        return ResponseEntity.ok(
+                new JwtResponse(token, "dummy-refresh-token"));
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<RegisterResponse> register(
+            @RequestBody RegisterRequest request) {
+
+        RegisterResponse response = registrationService.register(request);
+        return ResponseEntity.ok(response);
     }
 }
