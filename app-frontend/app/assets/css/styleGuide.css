@@ -1,0 +1,26 @@
+/* app-frontend/assets/scss/styleGuide.scss */
+
+:root {
+  /* Colors */
+  --primary-color: #4A90E2;
+  --secondary-color: #50E3C2;
+  --accent-color: #F5A623;
+  --error-color: #D0021B;
+  --success-color: #7ED321;
+  --background-color: #F8F9FA;
+  --text-color: #333333;
+  --light-text-color: #FFFFFF;
+  --border-color: #DDDDDD;
+
+  /* Fonts */
+  --primary-font: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-size-base: 16px;
+  --font-size-large: 1.25rem;   /* 20px */
+  --font-size-medium: 1rem;     /* 16px */
+  --font-size-small: 0.875rem;  /* 14px */
+
+  /* Breakpoints */
+  --desktop-breakpoint: 1200px;
+  --tablet-breakpoint: 768px;
+  --mobile-breakpoint: 480px;
+}

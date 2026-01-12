@@ -1,15 +1,75 @@
 <template>
-	<div>
+	<div class="app-container">
 		<NotificationOverlay />
-		<nav>
-			<NuxtLink to="/login">Login</NuxtLink> |
-			<NuxtLink to="/register">Register</NuxtLink>
-		</nav>
-		<hr />
-		<NuxtPage />
+		<header class="app-header">
+			<nav class="app-nav">
+				<NuxtLink to="/" class="nav-link-brand">BugTracker</NuxtLink>
+				<div>
+					<NuxtLink to="/login" class="nav-link">Login</NuxtLink>
+					<NuxtLink to="/register" class="nav-link">Register</NuxtLink>
+				</div>
+			</nav>
+		</header>
+		<main class="app-main">
+			<NuxtPage />
+		</main>
 	</div>
 </template>
 
 <script setup>
 import NotificationOverlay from '~/components/NotificationOverlay.vue';
 </script>
+
+<style lang="scss">
+body {
+	background-color: var(--background-color);
+	color: var(--text-color);
+	font-family: var(--primary-font);
+	margin: 0;
+	padding: 0;
+}
+
+.app-container {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+}
+
+.app-header {
+	background-color: var(--primary-color);
+	color: var(--light-text-color);
+	padding: 1rem;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.app-nav {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	max-width: var(--desktop-breakpoint);
+	margin: 0 auto;
+}
+
+.nav-link-brand {
+	font-size: var(--font-size-large);
+	font-weight: bold;
+	color: var(--light-text-color);
+	text-decoration: none;
+}
+
+.nav-link {
+	color: var(--light-text-color);
+	text-decoration: none;
+	margin-left: 1rem;
+	font-size: var(--font-size-medium);
+
+	&:hover {
+		text-decoration: underline;
+	}
+}
+
+.app-main {
+	flex-grow: 1;
+	padding: 2rem 1rem;
+}
+</style>

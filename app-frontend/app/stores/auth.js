@@ -30,10 +30,14 @@ export const useAuthStore = defineStore('auth', {
 					body: { ...this.loginForm },
 				});
 				this.token = response.token;
+				this.user = {
+					username: this.loginForm.username,
+					membershipStatus: response.membershipStatus,
+				};
 				this.loginForm.username = '';
 				this.loginForm.password = '';
 				notificationStore.showNotification('Login successful!', 'success');
-				return { success: true };
+				return { success: true, membershipStatus: response.membershipStatus };
 			} catch (error) {
 				const message = handleApiError(error);
 				notificationStore.showNotification(message, 'error');
@@ -99,4 +103,5 @@ export const useAuthStore = defineStore('auth', {
 			this.token = null;
 		},
 	},
+	persist: true,
 });

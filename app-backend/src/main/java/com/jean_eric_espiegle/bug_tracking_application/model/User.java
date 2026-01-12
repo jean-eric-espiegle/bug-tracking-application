@@ -1,5 +1,6 @@
 package com.jean_eric_espiegle.bug_tracking_application.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,6 +26,7 @@ public class User {
     private LocalDateTime createdAt = LocalDateTime.now();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Membership> memberships;
 
     // --- getters / setters ---
@@ -85,5 +87,16 @@ public class User {
         return memberships.stream()
                 .map(Membership::getOrganization)
                 .collect(Collectors.toList());
+    }
+
+    @Transient
+    public String getMembershipStatus() {
+        if (memberships == null || memberships.isEmpty()) {
+            return "NEW";
+        }
+        if (memberships.stream().anyMatch(m -> m.getRole() == Role.OWNER)) {
+            return "OWNER";
+        }
+        return "MEMBER";
     }
 }

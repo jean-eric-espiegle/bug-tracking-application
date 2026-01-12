@@ -16,4 +16,6 @@ public interface MembershipRepository extends JpaRepository<Membership, Long> {
     long countByOrganizationAndRole(Organization organization, Role role);
 
     long countByOrganization(Organization organization);
+
+    long countByUserAndRole(User user, Role role);
 }

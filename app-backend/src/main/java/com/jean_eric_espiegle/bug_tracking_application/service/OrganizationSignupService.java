@@ -37,6 +37,14 @@ public class OrganizationSignupService {
         // 2️⃣ Validate plan
         PlanType planType = request.planType();
 
+        // Check if user on free plan can create more organizations
+        if (planType == PlanType.FREE) {
+            long ownedOrganizations = membershipRepository.countByUserAndRole(user, Role.OWNER);
+            if (ownedOrganizations > 0) {
+                throw new IllegalStateException("Users on the FREE plan can only own one organization.");
+            }
+        }
+
         SubscriptionPlan plan = planRepository.findById(planType)
                 .orElseThrow(() -> new IllegalStateException("Plan not found"));
 

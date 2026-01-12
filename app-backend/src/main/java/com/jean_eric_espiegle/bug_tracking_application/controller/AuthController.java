@@ -54,7 +54,7 @@ public class AuthController {
                 user.getRole().name());
 
         return ResponseEntity.ok(
-                new JwtResponse(token, "dummy-refresh-token"));
+                new JwtResponse(token, "dummy-refresh-token", user.getMembershipStatus()));
     }
 
     @PostMapping("/register")
