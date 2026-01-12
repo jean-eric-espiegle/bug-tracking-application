@@ -1,0 +1,14 @@
+export default defineEventHandler(async (event) => {
+  const { username } = getQuery(event);
+  const backendUrl = process.env.BACKEND_URL || 'http://localhost:8080';
+
+  try {
+    const response = await $fetch(`${backendUrl}/api/validate/username?username=${username}`, {
+      method: 'GET',
+    });
+    return response;
+  } catch (error) {
+    console.error('Error validating username:', error);
+    return { error: 'Failed to validate username' };
+  }
+});
