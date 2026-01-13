@@ -42,10 +42,22 @@ function selectVersion(versionId) {
 </script>
 
 <style scoped>
-.panel {
-	border: 1px solid #ccc;
-	border-radius: 8px;
-	padding: 1rem;
+@media (min-width: 1024px) {
+	.panel {
+		grid-row: 2/3;
+		grid-column: 2;
+		border-left: 1px solid #ccc;
+		border-radius: 8px;
+		padding: 1rem;
+	}
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+	.panel {
+		grid-row: 3;
+		grid-column: 1;
+		overflow-y: auto;
+	}
 }
 
 .panel-header {

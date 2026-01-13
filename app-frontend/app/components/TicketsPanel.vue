@@ -5,7 +5,7 @@
 			<button
 				class="create-btn"
 				@click="create"
-				:disabled="!dashboardStore.selectedOrganizationId"
+				:disabled="!dashboardStore.selectedVersionId"
 			>
 				+
 			</button>
@@ -51,11 +51,20 @@ function openTicket(ticket) {
 </script>
 
 <style scoped>
-.panel {
-	grid-column: 1/1;
-	border: 1px solid #ccc;
-	border-radius: 8px;
-	padding: 1rem;
+@media (min-width: 1024px) {
+	.panel {
+		grid-column: 1/1;
+		grid-row: 2/3;
+		padding: 1rem;
+	}
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+	.panel {
+		grid-row: 4;
+		grid-column: 1;
+		overflow-y: auto;
+	}
 }
 
 .panel-header {

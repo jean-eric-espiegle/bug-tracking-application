@@ -12,7 +12,7 @@
 				</div>
 				<div v-else>
 					<!-- <NuxtLink to="/logout" class="nav-link">Logout</NuxtLink> -->
-					<NuxtLink to="/tickets" class="nav-link">Tickets</NuxtLink>
+					<NuxtLink to="/dashboard" class="nav-link">Tickets</NuxtLink>
 					<NuxtLink to="/logs" class="nav-link">Logs</NuxtLink>
 				</div>
 			</nav>
@@ -82,6 +82,9 @@ body {
 
 .app-main {
 	flex-grow: 1;
-	padding: 2rem 1rem;
+	padding: 1%;
+	display: grid;
+	grid-template-columns: 100%;
+	grid-template-rows: 100%;
 }
 </style>

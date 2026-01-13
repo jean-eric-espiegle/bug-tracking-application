@@ -31,10 +31,13 @@ function create() {
 </script>
 
 <style scoped>
-.panel {
-	border: 1px solid #ccc;
-	border-radius: 8px;
-	padding: 1rem;
+@media (min-width: 1024px) {
+	.panel {
+		grid-row: 2/4;
+		grid-column: 3;
+		border-left: 1px solid #ccc;
+		padding: 1rem;
+	}
 }
 
 .panel-header {

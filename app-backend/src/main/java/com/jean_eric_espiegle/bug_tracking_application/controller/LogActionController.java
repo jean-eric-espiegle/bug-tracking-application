@@ -1,6 +1,6 @@
 package com.jean_eric_espiegle.bug_tracking_application.controller;
 
-import com.jean_eric_espiegle.bug_tracking_application.model.LogAction;
+import com.jean_eric_espiegle.bug_tracking_application.dto.LogActionResponse;
 import com.jean_eric_espiegle.bug_tracking_application.service.LogActionService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +19,7 @@ public class LogActionController {
     }
 
     @GetMapping
-    public List<LogAction> getLogs(
+    public List<LogActionResponse> getLogs(
             @RequestParam(required = false) Long userId,
             @RequestParam(required = false) Long organizationId,
             @RequestParam(required = false) String role,
