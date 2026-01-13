@@ -1,12 +1,12 @@
 <template>
-    <div class="dashboard-container">
-        <h1>Dashboard</h1>
-        <div class="panels">
-            <TicketsPanel />
-            <VersionsPanel />
-            <OrganizationsPanel />
-        </div>
-    </div>
+	<div class="dashboard-container">
+		<h1>Dashboard</h1>
+		<div class="panels">
+			<TicketsPanel />
+			<VersionsPanel />
+			<OrganizationsPanel />
+		</div>
+	</div>
 </template>
 
 <script setup>
@@ -19,33 +19,27 @@ import { onMounted } from 'vue';
 const dashboardStore = useDashboardStore();
 
 onMounted(() => {
-    // I need a way to get the current organization id
-    // For now, let's assume the first organization
-    dashboardStore.fetchOrganizations().then(() => {
-        if (dashboardStore.organizations.length > 0) {
-            const orgId = dashboardStore.organizations[0].id;
-            dashboardStore.fetchTickets(orgId);
-            dashboardStore.fetchVersions(orgId);
-        }
-    });
+	dashboardStore.fetchOrganizations();
 });
 </script>
 
 <style scoped>
 .dashboard-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem;
+	max-width: 1200px;
+	height: 85vh;
+	margin: 0 auto;
+	padding: 1%;
 }
 
 h1 {
-    text-align: center;
-    margin-bottom: 2rem;
+	text-align: center;
+	margin-bottom: 2rem;
 }
 
 .panels {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
+	display: grid;
+	height: 89%;
+	grid-template-columns: 49% 24.5% 24.5%;
+	gap: 1%;
 }
 </style>

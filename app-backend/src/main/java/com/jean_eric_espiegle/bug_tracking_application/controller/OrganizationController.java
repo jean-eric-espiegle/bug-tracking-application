@@ -4,6 +4,7 @@ import com.jean_eric_espiegle.bug_tracking_application.dto.AddMemberRequest;
 import com.jean_eric_espiegle.bug_tracking_application.dto.OrganizationSignupRequest;
 import com.jean_eric_espiegle.bug_tracking_application.dto.OrganizationSignupResponse;
 import com.jean_eric_espiegle.bug_tracking_application.dto.OwnershipTransferRequest;
+import com.jean_eric_espiegle.bug_tracking_application.dto.OrganizationDto;
 import com.jean_eric_espiegle.bug_tracking_application.model.Organization;
 import com.jean_eric_espiegle.bug_tracking_application.model.User;
 import com.jean_eric_espiegle.bug_tracking_application.repository.UserRepository;
@@ -33,10 +34,19 @@ public class OrganizationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Organization>> getOrganizations(Authentication authentication) {
+    public ResponseEntity<List<OrganizationDto>> getOrganizations(Authentication authentication) {
+        // Get the logged-in user
         User user = userRepository.findByUsername(authentication.getName())
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        return ResponseEntity.ok(user.getOrganizations());
+
+        // Map Organizations to DTO
+        List<OrganizationDto> orgDtos = user.getOrganizations().stream()
+                .map(org -> new OrganizationDto(
+                        org.getId(),
+                        org.getName()))
+                .toList();
+
+        return ResponseEntity.ok(orgDtos);
     }
 
     @PostMapping("/signup")

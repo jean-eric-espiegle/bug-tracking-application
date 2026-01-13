@@ -7,6 +7,9 @@ export const useDashboardStore = defineStore('dashboard', {
         tickets: [],
         versions: [],
         organizations: [],
+        selectedOrganizationId: null,
+        selectedVersionId: null,
+        isCreateVersionOverlayVisible: false,
         loading: {
             tickets: false,
             versions: false,
@@ -15,11 +18,44 @@ export const useDashboardStore = defineStore('dashboard', {
     }),
 
     actions: {
-        async fetchTickets(organizationId) {
+        showCreateVersionOverlay() {
+            this.isCreateVersionOverlayVisible = true;
+        },
+
+        hideCreateVersionOverlay() {
+            this.isCreateVersionOverlayVisible = false;
+        },
+
+        async createVersion(versionData) {
+            if (!this.selectedOrganizationId) return;
+
+            const authStore = useAuthStore();
+            try {
+                await $fetch(`/api/organizations/${this.selectedOrganizationId}/versions`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${authStore.token}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: versionData,
+                });
+                this.hideCreateVersionOverlay();
+                await this.fetchVersions(this.selectedOrganizationId);
+            } catch (error) {
+                const message = handleApiError(error);
+                console.error('Failed to create version:', message);
+            }
+        },
+
+        async fetchTickets(organizationId, versionId) {
             this.loading.tickets = true;
             const authStore = useAuthStore();
             try {
-                this.tickets = await $fetch(`/api/organizations/${organizationId}/tickets`, {
+                let url = `/api/organizations/${organizationId}/tickets`;
+                if (versionId) {
+                    url += `?versionId=${versionId}`;
+                }
+                this.tickets = await $fetch(url, {
                     headers: {
                         'Authorization': `Bearer ${authStore.token}`
                     }
@@ -27,6 +63,7 @@ export const useDashboardStore = defineStore('dashboard', {
             } catch (error) {
                 const message = handleApiError(error);
                 console.error('Failed to fetch tickets:', message);
+                this.tickets = []; // Clear tickets on error
             } finally {
                 this.loading.tickets = false;
             }
@@ -53,12 +90,15 @@ export const useDashboardStore = defineStore('dashboard', {
             this.loading.organizations = true;
             const authStore = useAuthStore();
             try {
-                // Assuming there's an endpoint to get the user's organizations
                 this.organizations = await $fetch('/api/organizations', {
                     headers: {
                         'Authorization': `Bearer ${authStore.token}`
                     }
                 });
+
+                if (this.organizations.length > 0) {
+                    this.selectOrganization(this.organizations[0].id);
+                }
             } catch (error) {
                 const message = handleApiError(error);
                 console.error('Failed to fetch organizations:', message);
@@ -66,5 +106,28 @@ export const useDashboardStore = defineStore('dashboard', {
                 this.loading.organizations = false;
             }
         },
+
+        selectOrganization(organizationId) {
+            if (this.selectedOrganizationId === organizationId) {
+                this.selectedOrganizationId = null;
+                this.versions = [];
+                this.tickets = [];
+            } else {
+                this.selectedOrganizationId = organizationId;
+                this.selectedVersionId = null; // Reset selected version
+                this.fetchVersions(organizationId);
+                this.fetchTickets(organizationId); // Fetch all tickets for the org
+            }
+        },
+
+        selectVersion(versionId) {
+            if (this.selectedVersionId === versionId) {
+                this.selectedVersionId = null;
+                this.fetchTickets(this.selectedOrganizationId);
+            } else {
+                this.selectedVersionId = versionId;
+                this.fetchTickets(this.selectedOrganizationId, versionId);
+            }
+        }
     },
 });

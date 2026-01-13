@@ -7,8 +7,10 @@ import com.jean_eric_espiegle.bug_tracking_application.model.Version;
 import com.jean_eric_espiegle.bug_tracking_application.repository.VersionRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,10 +19,25 @@ public class VersionService {
 
     private final VersionRepository versionRepository;
     private final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+    private static final DateTimeFormatter USER_DATE_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
 
     public VersionService(VersionRepository versionRepository) {
         this.versionRepository = versionRepository;
+    }
+
+    private LocalDateTime parseReleaseDate(String releaseDate) {
+        if (releaseDate == null) {
+            return null;
+        }
+        try {
+            // First, try to parse as ISO_LOCAL_DATE_TIME
+            return LocalDateTime.parse(releaseDate, formatter);
+        } catch (DateTimeParseException e) {
+            // If that fails, try to parse as dd-MM-yyyy and set time to start of day
+            LocalDate localDate = LocalDate.parse(releaseDate, USER_DATE_FORMATTER);
+            return localDate.atStartOfDay();
+        }
     }
 
     // Create a new version for an organization
@@ -29,7 +46,7 @@ public class VersionService {
         version.setVersionName(versionRequest.name());
         version.setOrganization(organization);
         if (versionRequest.releaseDate() != null) {
-            version.setReleasedAt(LocalDateTime.parse(versionRequest.releaseDate(), formatter));
+            version.setReleasedAt(parseReleaseDate(versionRequest.releaseDate()));
         }
         return versionRepository.save(version);
     }
@@ -54,7 +71,7 @@ public class VersionService {
         Version existingVersion = getVersionById(versionId);
         existingVersion.setVersionName(versionRequest.name());
         if (versionRequest.releaseDate() != null) {
-            existingVersion.setReleasedAt(LocalDateTime.parse(versionRequest.releaseDate(), formatter));
+            existingVersion.setReleasedAt(parseReleaseDate(versionRequest.releaseDate()));
         } else {
             existingVersion.setReleasedAt(null);
         }

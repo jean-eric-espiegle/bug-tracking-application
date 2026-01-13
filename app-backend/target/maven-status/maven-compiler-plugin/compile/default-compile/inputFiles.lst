@@ -26,6 +26,7 @@
 /Users/jean.eric/Documents/PrivateProjects/bug-tracking-application/app-backend/src/main/java/com/jean_eric_espiegle/bug_tracking_application/dto/VersionResponse.java
 /Users/jean.eric/Documents/PrivateProjects/bug-tracking-application/app-backend/src/main/java/com/jean_eric_espiegle/bug_tracking_application/dto/TicketResponse.java
 /Users/jean.eric/Documents/PrivateProjects/bug-tracking-application/app-backend/src/main/java/com/jean_eric_espiegle/bug_tracking_application/dto/RegisterRequest.java
+/Users/jean.eric/Documents/PrivateProjects/bug-tracking-application/app-backend/src/main/java/com/jean_eric_espiegle/bug_tracking_application/dto/OrganizationDto.java
 /Users/jean.eric/Documents/PrivateProjects/bug-tracking-application/app-backend/src/main/java/com/jean_eric_espiegle/bug_tracking_application/security/JwtAuthenticationFilter.java
 /Users/jean.eric/Documents/PrivateProjects/bug-tracking-application/app-backend/src/main/java/com/jean_eric_espiegle/bug_tracking_application/dto/OwnershipTransferRequest.java
 /Users/jean.eric/Documents/PrivateProjects/bug-tracking-application/app-backend/src/main/java/com/jean_eric_espiegle/bug_tracking_application/security/JwtResponse.java
