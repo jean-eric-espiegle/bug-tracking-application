@@ -10,9 +10,9 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    private final String SECRET_STRING = "my_super_secret_key_my_super_secret_key"; // 256-bit minimum
+    private final String SECRET_STRING = "my_super_secret_key_my_super_secret_key";
     private final Key SECRET_KEY = Keys.hmacShaKeyFor(SECRET_STRING.getBytes());
-    private final long EXPIRATION_MS = 1000 * 60 * 15; // 15 minutes
+    private final long EXPIRATION_MS = 1000 * 60 * 60;
 
     public String generateToken(String username, String role) {
         return Jwts.builder()

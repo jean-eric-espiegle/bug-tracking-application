@@ -12,8 +12,22 @@
 		</div>
 		<div v-if="dashboardStore.loading.tickets">Loading...</div>
 		<ul v-else-if="dashboardStore.tickets.length > 0">
-			<li v-for="ticket in dashboardStore.tickets" :key="ticket.id">
-				{{ ticket.title }}
+			<li
+				v-for="ticket in dashboardStore.tickets"
+				:key="ticket.id"
+				@click="openTicket(ticket)"
+			>
+				<i
+					:class="
+						ticket.status === 'OPEN'
+							? 'open'
+							: ticket.status === 'CLOSED'
+							? 'closed'
+							: 'blocked'
+					"
+					><b>{{ ticket.status }} </b></i
+				>
+				<p>{{ ticket.title }}</p>
 			</li>
 		</ul>
 		<div v-else>No tickets found.</div>
@@ -22,11 +36,17 @@
 
 <script setup>
 import { useDashboardStore } from '~/stores/dashboard';
+import { useTicketOverlayStore } from '~/stores/ticket-overlay';
+
 const dashboardStore = useDashboardStore();
+const ticketOverlayStore = useTicketOverlayStore();
 
 function create() {
-	// TODO: Implement create ticket
-	console.log('Create ticket');
+	dashboardStore.showCreateTicketOverlay();
+}
+
+function openTicket(ticket) {
+	ticketOverlayStore.openOverlay(ticket);
 }
 </script>
 
@@ -45,6 +65,38 @@ function create() {
 	margin-bottom: 1rem;
 }
 
+ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+li {
+	padding: 10px;
+	cursor: pointer;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
+li:hover {
+	background-color: var(--light-text-color);
+}
+.open {
+	display: block;
+	width: 15%;
+	color: red;
+}
+.closed {
+	display: block;
+	width: 15%;
+	color: greenyellow;
+}
+.blocked {
+	display: block;
+	width: 15%;
+	color: grey;
+}
 .create-btn {
 	border: none;
 	background: #28a745;

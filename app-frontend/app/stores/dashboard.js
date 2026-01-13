@@ -3,131 +3,199 @@ import { useAuthStore } from './auth';
 import { handleApiError } from '~/utils/errorHandler';
 
 export const useDashboardStore = defineStore('dashboard', {
-    state: () => ({
-        tickets: [],
-        versions: [],
-        organizations: [],
-        selectedOrganizationId: null,
-        selectedVersionId: null,
-        isCreateVersionOverlayVisible: false,
-        loading: {
-            tickets: false,
-            versions: false,
-            organizations: false,
-        },
-    }),
+	state: () => ({
+		tickets: [],
+		versions: [],
+		organizations: [],
+		members: [],
+		selectedOrganizationId: null,
+		selectedVersionId: null,
+		isCreateVersionOverlayVisible: false,
+		isCreateTicketOverlayVisible: false,
+		loading: {
+			tickets: false,
+			versions: false,
+			organizations: false,
+			members: false,
+		},
+	}),
 
-    actions: {
-        showCreateVersionOverlay() {
-            this.isCreateVersionOverlayVisible = true;
-        },
+	actions: {
+		showCreateVersionOverlay() {
+			this.isCreateVersionOverlayVisible = true;
+		},
 
-        hideCreateVersionOverlay() {
-            this.isCreateVersionOverlayVisible = false;
-        },
+		hideCreateVersionOverlay() {
+			this.isCreateVersionOverlayVisible = false;
+		},
 
-        async createVersion(versionData) {
-            if (!this.selectedOrganizationId) return;
+		showCreateTicketOverlay() {
+			this.isCreateTicketOverlayVisible = true;
+		},
 
-            const authStore = useAuthStore();
-            try {
-                await $fetch(`/api/organizations/${this.selectedOrganizationId}/versions`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${authStore.token}`,
-                        'Content-Type': 'application/json',
-                    },
-                    body: versionData,
-                });
-                this.hideCreateVersionOverlay();
-                await this.fetchVersions(this.selectedOrganizationId);
-            } catch (error) {
-                const message = handleApiError(error);
-                console.error('Failed to create version:', message);
-            }
-        },
+		hideCreateTicketOverlay() {
+			this.isCreateTicketOverlayVisible = false;
+		},
 
-        async fetchTickets(organizationId, versionId) {
-            this.loading.tickets = true;
-            const authStore = useAuthStore();
-            try {
-                let url = `/api/organizations/${organizationId}/tickets`;
-                if (versionId) {
-                    url += `?versionId=${versionId}`;
-                }
-                this.tickets = await $fetch(url, {
-                    headers: {
-                        'Authorization': `Bearer ${authStore.token}`
-                    }
-                });
-            } catch (error) {
-                const message = handleApiError(error);
-                console.error('Failed to fetch tickets:', message);
-                this.tickets = []; // Clear tickets on error
-            } finally {
-                this.loading.tickets = false;
-            }
-        },
+		async createTicket(ticketData) {
+			if (!this.selectedOrganizationId) return;
 
-        async fetchVersions(organizationId) {
-            this.loading.versions = true;
-            const authStore = useAuthStore();
-            try {
-                this.versions = await $fetch(`/api/organizations/${organizationId}/versions`, {
-                    headers: {
-                        'Authorization': `Bearer ${authStore.token}`
-                    }
-                });
-            } catch (error) {
-                const message = handleApiError(error);
-                console.error('Failed to fetch versions:', message);
-            } finally {
-                this.loading.versions = false;
-            }
-        },
+			const authStore = useAuthStore();
+			try {
+				await $fetch(
+					`/api/organizations/${this.selectedOrganizationId}/tickets`,
+					{
+						method: 'POST',
+						headers: {
+							Authorization: `Bearer ${authStore.token}`,
+							'Content-Type': 'application/json',
+						},
+						body: ticketData,
+					},
+				);
+				this.hideCreateTicketOverlay();
+				await this.fetchTickets(this.selectedOrganizationId);
+			} catch (error) {
+				const message = handleApiError(error);
+				console.error('Failed to create ticket:', message);
+			}
+		},
 
-        async fetchOrganizations() {
-            this.loading.organizations = true;
-            const authStore = useAuthStore();
-            try {
-                this.organizations = await $fetch('/api/organizations', {
-                    headers: {
-                        'Authorization': `Bearer ${authStore.token}`
-                    }
-                });
+		async fetchMembers(searchTerm = '') {
+			if (!this.selectedOrganizationId) return;
+			this.loading.members = true;
+			const authStore = useAuthStore();
+			try {
+				const url = `/api/organizations/${this.selectedOrganizationId}/members?search=${searchTerm}`;
+				this.members = await $fetch(url, {
+					headers: {
+						Authorization: `Bearer ${authStore.token}`,
+					},
+				});
+			} catch (error) {
+				const message = handleApiError(error);
+				console.error('Failed to fetch members:', message);
+			} finally {
+				this.loading.members = false;
+			}
+		},
 
-                if (this.organizations.length > 0) {
-                    this.selectOrganization(this.organizations[0].id);
-                }
-            } catch (error) {
-                const message = handleApiError(error);
-                console.error('Failed to fetch organizations:', message);
-            } finally {
-                this.loading.organizations = false;
-            }
-        },
+		async createVersion(versionData) {
+			if (!this.selectedOrganizationId) return;
 
-        selectOrganization(organizationId) {
-            if (this.selectedOrganizationId === organizationId) {
-                this.selectedOrganizationId = null;
-                this.versions = [];
-                this.tickets = [];
-            } else {
-                this.selectedOrganizationId = organizationId;
-                this.selectedVersionId = null; // Reset selected version
-                this.fetchVersions(organizationId);
-                this.fetchTickets(organizationId); // Fetch all tickets for the org
-            }
-        },
+			const authStore = useAuthStore();
+			try {
+				await $fetch(
+					`/api/organizations/${this.selectedOrganizationId}/versions`,
+					{
+						method: 'POST',
+						headers: {
+							Authorization: `Bearer ${authStore.token}`,
+							'Content-Type': 'application/json',
+						},
+						body: versionData,
+					},
+				);
+				this.hideCreateVersionOverlay();
+				await this.fetchVersions(this.selectedOrganizationId);
+			} catch (error) {
+				const message = handleApiError(error);
+				console.error('Failed to create version:', message);
+			}
+		},
 
-        selectVersion(versionId) {
-            if (this.selectedVersionId === versionId) {
-                this.selectedVersionId = null;
-                this.fetchTickets(this.selectedOrganizationId);
-            } else {
-                this.selectedVersionId = versionId;
-                this.fetchTickets(this.selectedOrganizationId, versionId);
-            }
-        }
-    },
+		async fetchTickets(organizationId, versionId) {
+			this.loading.tickets = true;
+			const authStore = useAuthStore();
+			try {
+				let url;
+				if (versionId) {
+					url = `/api/versions/${versionId}/tickets`;
+				} else {
+					url = `/api/organizations/${organizationId}/tickets`;
+				}
+
+				this.tickets = await $fetch(url, {
+					headers: {
+						Authorization: `Bearer ${authStore.token}`,
+					},
+				});
+			} catch (error) {
+				const message = handleApiError(error);
+				console.error('Failed to fetch tickets:', message);
+				this.tickets = [];
+			} finally {
+				this.loading.tickets = false;
+			}
+		},
+
+		async fetchVersions(organizationId) {
+			this.loading.versions = true;
+			const authStore = useAuthStore();
+			try {
+				this.versions = await $fetch(
+					`/api/organizations/${organizationId}/versions`,
+					{
+						headers: {
+							Authorization: `Bearer ${authStore.token}`,
+						},
+					},
+				);
+			} catch (error) {
+				const message = handleApiError(error);
+				console.error('Failed to fetch versions:', message);
+			} finally {
+				this.loading.versions = false;
+			}
+		},
+
+		async fetchOrganizations() {
+			this.loading.organizations = true;
+			const authStore = useAuthStore();
+			try {
+				this.organizations = await $fetch('/api/organizations', {
+					headers: {
+						Authorization: `Bearer ${authStore.token}`,
+					},
+				});
+
+				if (this.organizations.length > 0) {
+					this.selectOrganization(this.organizations[0].id);
+				}
+			} catch (error) {
+				const message = handleApiError(error);
+				console.error('Failed to fetch organizations:', message);
+			} finally {
+				this.loading.organizations = false;
+			}
+		},
+
+		selectOrganization(organizationId) {
+			if (this.selectedOrganizationId === organizationId) {
+				this.selectedOrganizationId = null;
+				this.versions = [];
+				this.tickets = [];
+				this.members = [];
+			} else {
+				this.selectedOrganizationId = organizationId;
+				this.selectedVersionId = null; // Reset selected version
+				this.fetchVersions(organizationId);
+				// this.fetchTickets(organizationId); // Fetch all tickets for the org
+				this.fetchMembers();
+			}
+		},
+
+		selectVersion(versionId) {
+			if (this.selectedVersionId === versionId) {
+				this.selectedVersionId = null;
+				this.fetchTickets(this.selectedOrganizationId);
+			} else {
+				this.selectedVersionId = versionId;
+				this.fetchTickets(this.selectedOrganizationId, versionId);
+			}
+		},
+		closeCreateTicketOverlay() {
+			this.isCreateTicketOverlayVisible = false;
+		},
+	},
 });

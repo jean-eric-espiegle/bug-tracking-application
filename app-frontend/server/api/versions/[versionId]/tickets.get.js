@@ -1,10 +1,10 @@
 export default defineEventHandler(async (event) => {
-  const { orgId } = event.context.params;
+  const { versionId } = event.context.params;
   const backendUrl = process.env.BACKEND_URL || 'http://localhost:8080';
   const headers = getHeaders(event);
 
   try {
-    const response = await $fetch(`${backendUrl}/api/organizations/${orgId}/versions`, {
+    const response = await $fetch(`${backendUrl}/api/versions/${versionId}/tickets`, {
       method: 'GET',
       headers: {
         'Authorization': headers.authorization || ''
@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
     });
     return response;
   } catch (error) {
-    console.error('Error fetching versions for organization:', error);
-    return { error: 'Failed to fetch versions' };
+    console.error('Error fetching tickets by version:', error);
+    return { error: 'Failed to fetch tickets' };
   }
 });

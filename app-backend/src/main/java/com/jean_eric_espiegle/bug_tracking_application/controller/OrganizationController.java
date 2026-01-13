@@ -1,6 +1,7 @@
 package com.jean_eric_espiegle.bug_tracking_application.controller;
 
 import com.jean_eric_espiegle.bug_tracking_application.dto.AddMemberRequest;
+import com.jean_eric_espiegle.bug_tracking_application.dto.MemberDto;
 import com.jean_eric_espiegle.bug_tracking_application.dto.OrganizationSignupRequest;
 import com.jean_eric_espiegle.bug_tracking_application.dto.OrganizationSignupResponse;
 import com.jean_eric_espiegle.bug_tracking_application.dto.OwnershipTransferRequest;
@@ -47,6 +48,14 @@ public class OrganizationController {
                 .toList();
 
         return ResponseEntity.ok(orgDtos);
+    }
+
+    @GetMapping("/{organizationId}/members")
+    public ResponseEntity<List<MemberDto>> getMembers(
+            @PathVariable Long organizationId,
+            @RequestParam(value = "search", required = false) String searchTerm) {
+        List<MemberDto> members = organizationService.getMembers(organizationId, searchTerm);
+        return ResponseEntity.ok(members);
     }
 
     @PostMapping("/signup")

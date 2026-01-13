@@ -1,12 +1,19 @@
 <template>
 	<div class="app-container">
 		<NotificationOverlay />
+		<TicketOverlay />
+		<CreateTicketOverlay />
 		<header class="app-header">
 			<nav class="app-nav">
 				<NuxtLink to="/" class="nav-link-brand">BugTracker</NuxtLink>
-				<div>
+				<div v-if="authStore.status === null">
 					<NuxtLink to="/login" class="nav-link">Login</NuxtLink>
 					<NuxtLink to="/register" class="nav-link">Register</NuxtLink>
+				</div>
+				<div v-else>
+					<!-- <NuxtLink to="/logout" class="nav-link">Logout</NuxtLink> -->
+					<NuxtLink to="/tickets" class="nav-link">Tickets</NuxtLink>
+					<NuxtLink to="/logs" class="nav-link">Logs</NuxtLink>
 				</div>
 			</nav>
 		</header>
@@ -18,6 +25,11 @@
 
 <script setup>
 import NotificationOverlay from '~/components/NotificationOverlay.vue';
+import TicketOverlay from '~/components/TicketOverlay.vue';
+import CreateTicketOverlay from '~/components/CreateTicketOverlay.vue';
+import { useAuthStore } from '~/stores/auth';
+
+const authStore = useAuthStore();
 </script>
 
 <style lang="scss">

@@ -7,8 +7,6 @@ export const handleApiError = (error) => {
   const { statusCode } = error;
 
   switch (statusCode) {
-    case 401:
-      return 'Unauthorized: Incorrect username or password.';
     case 403:
       return 'Forbidden: You do not have permission to perform this action.';
     case 404:

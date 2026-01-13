@@ -19,6 +19,7 @@ export const useAuthStore = defineStore('auth', {
 			usernameExists: false,
 			emailExists: false,
 		},
+		status: null,
 	}),
 
 	actions: {
@@ -37,6 +38,7 @@ export const useAuthStore = defineStore('auth', {
 				this.loginForm.username = '';
 				this.loginForm.password = '';
 				notificationStore.showNotification('Login successful!', 'success');
+				this.status = 'Logged In';
 				return { success: true, membershipStatus: response.membershipStatus };
 			} catch (error) {
 				const message = handleApiError(error);

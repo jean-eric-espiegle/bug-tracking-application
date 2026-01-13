@@ -57,4 +57,10 @@ public class TicketController {
         List<TicketResponse> tickets = ticketService.getTicketsByOrganization(orgId);
         return ResponseEntity.ok(tickets);
     }
+
+    @GetMapping("/versions/{versionId}/tickets")
+    public ResponseEntity<List<TicketResponse>> getTicketsByVersion(@PathVariable Long versionId) {
+        List<TicketResponse> tickets = ticketService.getTicketsByVersion(versionId);
+        return ResponseEntity.ok(tickets);
+    }
 }
