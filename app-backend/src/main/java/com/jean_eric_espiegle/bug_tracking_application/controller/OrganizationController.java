@@ -1,6 +1,8 @@
 package com.jean_eric_espiegle.bug_tracking_application.controller;
 
+import com.jean_eric_espiegle.bug_tracking_application.dto.AddMemberByEmailRequest;
 import com.jean_eric_espiegle.bug_tracking_application.dto.AddMemberRequest;
+import com.jean_eric_espiegle.bug_tracking_application.dto.CreateOrganizationRequest;
 import com.jean_eric_espiegle.bug_tracking_application.dto.MemberDto;
 import com.jean_eric_espiegle.bug_tracking_application.dto.OrganizationSignupRequest;
 import com.jean_eric_espiegle.bug_tracking_application.dto.OrganizationSignupResponse;
@@ -37,11 +39,12 @@ public class OrganizationController {
         User user = userRepository.findByUsername(authentication.getName())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // Map Organizations to DTO
-        List<OrganizationDto> orgDtos = user.getOrganizations().stream()
-                .map(org -> new OrganizationDto(
-                        org.getId(),
-                        org.getName()))
+        // Map Organizations to DTO with membership role
+        List<OrganizationDto> orgDtos = user.getMemberships().stream()
+                .map(membership -> new OrganizationDto(
+                        membership.getOrganization().getId(),
+                        membership.getOrganization().getName(),
+                        membership.getRole()))
                 .toList();
 
         return ResponseEntity.ok(orgDtos);
@@ -67,7 +70,25 @@ public class OrganizationController {
         OrganizationSignupResponse response = new OrganizationSignupResponse(
                 organization.getId(),
                 organization.getName(),
-                organization.getSubscriptionPlan().getType().name(),
+                user.getSubscriptionPlan() != null ? user.getSubscriptionPlan().getType().name() : "FREE",
+                user.getUsername());
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping
+    public ResponseEntity<OrganizationSignupResponse> createOrganization(
+            @RequestBody CreateOrganizationRequest request,
+            Authentication authentication) {
+        User user = userRepository.findByUsername(authentication.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Organization organization = organizationService.createOrganizationWithAutoPlan(request, user);
+
+        OrganizationSignupResponse response = new OrganizationSignupResponse(
+                organization.getId(),
+                organization.getName(),
+                user.getSubscriptionPlan() != null ? user.getSubscriptionPlan().getType().name() : "FREE",
                 user.getUsername());
 
         return ResponseEntity.ok(response);
@@ -95,5 +116,28 @@ public class OrganizationController {
 
         organizationService.addMember(organizationId, request, currentUser);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{organizationId}/invite")
+    public ResponseEntity<Void> inviteMember(
+            @PathVariable Long organizationId,
+            @RequestBody AddMemberByEmailRequest request,
+            Authentication authentication) {
+        User currentUser = userRepository.findByUsername(authentication.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        organizationService.inviteMember(organizationId, request, currentUser);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{organizationId}")
+    public ResponseEntity<Void> deleteOrganization(
+            @PathVariable Long organizationId,
+            Authentication authentication) {
+        User currentUser = userRepository.findByUsername(authentication.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        organizationService.deleteOrganization(organizationId, currentUser);
+        return ResponseEntity.noContent().build();
     }
 }

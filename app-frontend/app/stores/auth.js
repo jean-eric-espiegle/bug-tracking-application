@@ -6,6 +6,7 @@ export const useAuthStore = defineStore('auth', {
 	state: () => ({
 		user: null,
 		token: null,
+		subscriptions: [],
 		loginForm: {
 			username: '',
 			password: '',
@@ -34,12 +35,14 @@ export const useAuthStore = defineStore('auth', {
 				this.user = {
 					username: this.loginForm.username,
 					membershipStatus: response.membershipStatus,
+					accountPlan: response.accountPlan,
+					memberships: response.memberships,
 				};
 				this.loginForm.username = '';
 				this.loginForm.password = '';
 				notificationStore.showNotification('Login successful!', 'success');
 				this.status = 'Logged In';
-				return { success: true, membershipStatus: response.membershipStatus };
+				return { success: true, membershipStatus: response.membershipStatus, accountPlan: response.accountPlan, memberships: response.memberships };
 			} catch (error) {
 				const message = handleApiError(error);
 				notificationStore.showNotification(message, 'error');
@@ -100,9 +103,25 @@ export const useAuthStore = defineStore('auth', {
 			}
 		},
 
-		logout() {
+		async logout() {
+			try {
+				// Call the logout API endpoint
+				await $fetch('/api/auth/logout', {
+					method: 'POST',
+					headers: {
+						'Authorization': `Bearer ${this.token}`
+					}
+				});
+			} catch (error) {
+				// Even if the API call fails, we still want to clear local state
+				console.warn('Logout API call failed, but clearing local state anyway:', error);
+			}
+
+			// Clear local authentication state
 			this.user = null;
 			this.token = null;
+			this.subscriptions = [];
+			this.status = null;
 		},
 	},
 	persist: true,

@@ -34,25 +34,20 @@ public class SubscriptionSelectionService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalStateException("User not found"));
 
-        if (request.planType() == PlanType.FREE) {
-            boolean hasFreePlan = user.getMemberships().stream()
-                    .anyMatch(m -> m.getOrganization().getSubscriptionPlan().getType() == PlanType.FREE);
-            if (hasFreePlan) {
-                throw new IllegalStateException("You can only have one organization on the FREE plan.");
-            }
-        }
-
         SubscriptionPlan plan = planRepository.findById(request.planType())
                 .orElseThrow(() -> new IllegalStateException("Plan not found"));
 
-        // Create organization
+        // Update user's account-level subscription plan
+        user.setSubscriptionPlan(plan);
+        userRepository.save(user);
+
+        // Create organization associated to this user (via membership only)
         Organization org = new Organization();
         if (plan.getType() == PlanType.FREE) {
             org.setName(user.getUsername() + "'s Organization");
         } else {
             org.setName(request.organizationName());
         }
-        org.setSubscriptionPlan(plan);
 
         // Save organization first to generate ID
         organizationRepository.save(org);

@@ -11,9 +11,9 @@
 					<NuxtLink to="/register" class="nav-link">Register</NuxtLink>
 				</div>
 				<div v-else>
-					<!-- <NuxtLink to="/logout" class="nav-link">Logout</NuxtLink> -->
 					<NuxtLink to="/dashboard" class="nav-link">Tickets</NuxtLink>
 					<NuxtLink to="/logs" class="nav-link">Logs</NuxtLink>
+					<button @click="handleLogout" class="nav-link-btn">Logout</button>
 				</div>
 			</nav>
 		</header>
@@ -28,8 +28,24 @@ import NotificationOverlay from '~/components/NotificationOverlay.vue';
 import TicketOverlay from '~/components/TicketOverlay.vue';
 import CreateTicketOverlay from '~/components/CreateTicketOverlay.vue';
 import { useAuthStore } from '~/stores/auth';
+import { useNotificationStore } from '~/stores/notification';
 
 const authStore = useAuthStore();
+const notificationStore = useNotificationStore();
+
+async function handleLogout() {
+	try {
+		await authStore.logout();
+		notificationStore.showNotification('Logged out successfully', 'success');
+		// Redirect to home page
+		await navigateTo('/');
+	} catch (error) {
+		console.error('Logout failed:', error);
+		// Still show success since local state was cleared
+		notificationStore.showNotification('Logged out successfully', 'success');
+		await navigateTo('/');
+	}
+}
 </script>
 
 <style lang="scss">
@@ -74,6 +90,20 @@ body {
 	text-decoration: none;
 	margin-left: 1rem;
 	font-size: var(--font-size-medium);
+
+	&:hover {
+		text-decoration: underline;
+	}
+}
+
+.nav-link-btn {
+	background: none;
+	border: none;
+	color: var(--light-text-color);
+	text-decoration: none;
+	margin-left: 1rem;
+	font-size: var(--font-size-medium);
+	cursor: pointer;
 
 	&:hover {
 		text-decoration: underline;

@@ -14,10 +14,6 @@ public class Organization {
     @Column(nullable = false)
     private String name;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "plan_type")
-    private SubscriptionPlan subscriptionPlan;
-
     @Column(name = "enterprise_pending")
     private boolean enterprisePending = false;
 
@@ -36,14 +32,6 @@ public class Organization {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public SubscriptionPlan getSubscriptionPlan() {
-        return subscriptionPlan;
-    }
-
-    public void setSubscriptionPlan(SubscriptionPlan subscriptionPlan) {
-        this.subscriptionPlan = subscriptionPlan;
     }
 
     public boolean isEnterprisePending() {

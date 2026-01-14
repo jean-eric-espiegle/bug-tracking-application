@@ -40,6 +40,13 @@ public class AuditLogAspect {
             if (user == null)
                 return;
 
+            // Handle authentication actions (login/logout) differently
+            if (isAuthenticationAction(loggableAction.action())) {
+                logAuthenticationAction(user, loggableAction, result);
+                return;
+            }
+
+            // Handle organization-specific actions
             Long organizationId = resolveOrganizationId(joinPoint.getArgs());
             if (organizationId == null)
                 return;
@@ -77,6 +84,27 @@ public class AuditLogAspect {
                 return (Long) arg;
         }
         return null;
+    }
+
+    private boolean isAuthenticationAction(String action) {
+        return "User Login".equals(action) || "User Logout".equals(action);
+    }
+
+    private void logAuthenticationAction(User user, LoggableAction loggableAction, Object result) {
+        try {
+            LogAction log = new LogAction();
+            log.setUser(user);
+            // For authentication actions, organization and role are null
+            log.setOrganization(null);
+            log.setRole(null);
+            log.setAction(loggableAction.action());
+            log.setItemSnapshot(serialize(result));
+
+            logActionRepository.save(log);
+        } catch (Exception e) {
+            // Log the error but don't throw
+            System.err.println("Failed to log authentication action: " + e.getMessage());
+        }
     }
 
     private String serialize(Object obj) {

@@ -15,6 +15,14 @@ export default defineEventHandler(async (event) => {
     return response;
   } catch (error) {
     console.error('Error selecting plan:', error);
-    return { error: 'Failed to select plan' };
+    // Re-throw 401 errors so the auth plugin can intercept them
+    if (error?.response?.status === 401) {
+      throw createError({
+        statusCode: 401,
+        statusMessage: 'Unauthorized'
+      });
+    }
+    
+        return { error: 'Failed to select plan' };
   }
 });

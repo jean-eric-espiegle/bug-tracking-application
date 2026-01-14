@@ -1,11 +1,13 @@
 export default defineEventHandler(async (event) => {
-  const { ticketId, versionId } = event.context.params;
+  const { organizationId } = event.context.params;
+  const request = await readBody(event);
   const backendUrl = process.env.BACKEND_URL || 'http://localhost:8080';
   const headers = getHeaders(event);
 
   try {
-    const response = await $fetch(`${backendUrl}/api/tickets/${ticketId}/assign-version/${versionId}`, {
-      method: 'PUT',
+    const response = await $fetch(`${backendUrl}/api/organizations/${organizationId}/invite`, {
+      method: 'POST',
+      body: request,
       headers: {
         'Content-Type': 'application/json',
         'Authorization': headers.authorization || ''
@@ -13,7 +15,7 @@ export default defineEventHandler(async (event) => {
     });
     return response;
   } catch (error) {
-    console.error('Error assigning ticket to version:', error);
+    console.error('Error inviting member:', error);
     // Re-throw 401 errors so the auth plugin can intercept them
     if (error?.response?.status === 401) {
       throw createError({
@@ -21,7 +23,7 @@ export default defineEventHandler(async (event) => {
         statusMessage: 'Unauthorized'
       });
     }
-    
-        return { error: 'Failed to assign ticket' };
+
+    return { error: 'Failed to invite member' };
   }
 });

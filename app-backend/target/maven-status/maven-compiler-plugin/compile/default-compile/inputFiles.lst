@@ -8,6 +8,7 @@
 /Users/jean.eric/NeurogineAssignment/bug-tracking-application/app-backend/src/main/java/com/jean_eric_espiegle/bug_tracking_application/repository/VersionRepository.java
 /Users/jean.eric/NeurogineAssignment/bug-tracking-application/app-backend/src/main/java/com/jean_eric_espiegle/bug_tracking_application/dto/AddMemberRequest.java
 /Users/jean.eric/NeurogineAssignment/bug-tracking-application/app-backend/src/main/java/com/jean_eric_espiegle/bug_tracking_application/dto/TicketRequest.java
+/Users/jean.eric/NeurogineAssignment/bug-tracking-application/app-backend/src/main/java/com/jean_eric_espiegle/bug_tracking_application/dto/CreateOrganizationRequest.java
 /Users/jean.eric/NeurogineAssignment/bug-tracking-application/app-backend/src/main/java/com/jean_eric_espiegle/bug_tracking_application/controller/OrganizationController.java
 /Users/jean.eric/NeurogineAssignment/bug-tracking-application/app-backend/src/main/java/com/jean_eric_espiegle/bug_tracking_application/model/PlanType.java
 /Users/jean.eric/NeurogineAssignment/bug-tracking-application/app-backend/src/main/java/com/jean_eric_espiegle/bug_tracking_application/repository/UserRepository.java
@@ -18,6 +19,7 @@
 /Users/jean.eric/NeurogineAssignment/bug-tracking-application/app-backend/src/main/java/com/jean_eric_espiegle/bug_tracking_application/security/JwtAuthenticationFilter.java
 /Users/jean.eric/NeurogineAssignment/bug-tracking-application/app-backend/src/main/java/com/jean_eric_espiegle/bug_tracking_application/service/TicketService.java
 /Users/jean.eric/NeurogineAssignment/bug-tracking-application/app-backend/src/main/java/com/jean_eric_espiegle/bug_tracking_application/controller/EnterpriseRequestController.java
+/Users/jean.eric/NeurogineAssignment/bug-tracking-application/app-backend/src/main/java/com/jean_eric_espiegle/bug_tracking_application/model/InviteStatus.java
 /Users/jean.eric/NeurogineAssignment/bug-tracking-application/app-backend/src/main/java/com/jean_eric_espiegle/bug_tracking_application/dto/OrganizationSignupRequest.java
 /Users/jean.eric/NeurogineAssignment/bug-tracking-application/app-backend/src/main/java/com/jean_eric_espiegle/bug_tracking_application/security/JwtResponse.java
 /Users/jean.eric/NeurogineAssignment/bug-tracking-application/app-backend/src/main/java/com/jean_eric_espiegle/bug_tracking_application/model/Ticket.java
@@ -41,6 +43,10 @@
 /Users/jean.eric/NeurogineAssignment/bug-tracking-application/app-backend/src/main/java/com/jean_eric_espiegle/bug_tracking_application/service/OrganizationService.java
 /Users/jean.eric/NeurogineAssignment/bug-tracking-application/app-backend/src/main/java/com/jean_eric_espiegle/bug_tracking_application/controller/TicketController.java
 /Users/jean.eric/NeurogineAssignment/bug-tracking-application/app-backend/src/main/java/com/jean_eric_espiegle/bug_tracking_application/service/LogActionService.java
+/Users/jean.eric/NeurogineAssignment/bug-tracking-application/app-backend/src/main/java/com/jean_eric_espiegle/bug_tracking_application/model/OrganizationInvite.java
+/Users/jean.eric/NeurogineAssignment/bug-tracking-application/app-backend/src/main/java/com/jean_eric_espiegle/bug_tracking_application/dto/SubscriptionDto.java
+/Users/jean.eric/NeurogineAssignment/bug-tracking-application/app-backend/src/main/java/com/jean_eric_espiegle/bug_tracking_application/dto/AddMemberByEmailRequest.java
+/Users/jean.eric/NeurogineAssignment/bug-tracking-application/app-backend/src/main/java/com/jean_eric_espiegle/bug_tracking_application/repository/OrganizationInviteRepository.java
 /Users/jean.eric/NeurogineAssignment/bug-tracking-application/app-backend/src/main/java/com/jean_eric_espiegle/bug_tracking_application/audit/AuditLogAspect.java
 /Users/jean.eric/NeurogineAssignment/bug-tracking-application/app-backend/src/main/java/com/jean_eric_espiegle/bug_tracking_application/controller/ValidationController.java
 /Users/jean.eric/NeurogineAssignment/bug-tracking-application/app-backend/src/main/java/com/jean_eric_espiegle/bug_tracking_application/model/Membership.java
@@ -53,6 +59,8 @@
 /Users/jean.eric/NeurogineAssignment/bug-tracking-application/app-backend/src/main/java/com/jean_eric_espiegle/bug_tracking_application/model/User.java
 /Users/jean.eric/NeurogineAssignment/bug-tracking-application/app-backend/src/main/java/com/jean_eric_espiegle/bug_tracking_application/repository/SubscriptionPlanRepository.java
 /Users/jean.eric/NeurogineAssignment/bug-tracking-application/app-backend/src/main/java/com/jean_eric_espiegle/bug_tracking_application/dto/EnterpriseRequestDTO.java
+/Users/jean.eric/NeurogineAssignment/bug-tracking-application/app-backend/src/main/java/com/jean_eric_espiegle/bug_tracking_application/dto/AccountPlanDto.java
+/Users/jean.eric/NeurogineAssignment/bug-tracking-application/app-backend/src/main/java/com/jean_eric_espiegle/bug_tracking_application/dto/MembershipDto.java
 /Users/jean.eric/NeurogineAssignment/bug-tracking-application/app-backend/src/main/java/com/jean_eric_espiegle/bug_tracking_application/dto/LogActionRequest.java
 /Users/jean.eric/NeurogineAssignment/bug-tracking-application/app-backend/src/main/java/com/jean_eric_espiegle/bug_tracking_application/repository/LogActionRepository.java
 /Users/jean.eric/NeurogineAssignment/bug-tracking-application/app-backend/src/main/java/com/jean_eric_espiegle/bug_tracking_application/repository/OrganizationRepository.java

@@ -51,7 +51,6 @@ public class OrganizationSignupService {
         // 3️⃣ Create organization
         Organization organization = new Organization();
         organization.setName(request.organizationName());
-        organization.setSubscriptionPlan(plan);
 
         organizationRepository.save(organization);
 

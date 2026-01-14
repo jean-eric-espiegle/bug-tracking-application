@@ -12,6 +12,9 @@ export const useDashboardStore = defineStore('dashboard', {
 		selectedVersionId: null,
 		isCreateVersionOverlayVisible: false,
 		isCreateTicketOverlayVisible: false,
+		isCreateOrganizationOverlayVisible: false,
+		isOrganizationDetailsOverlayVisible: false,
+		selectedOrganizationForDetails: null,
 		loading: {
 			tickets: false,
 			versions: false,
@@ -35,6 +38,24 @@ export const useDashboardStore = defineStore('dashboard', {
 
 		hideCreateTicketOverlay() {
 			this.isCreateTicketOverlayVisible = false;
+		},
+
+		showCreateOrganizationOverlay() {
+			this.isCreateOrganizationOverlayVisible = true;
+		},
+
+		hideCreateOrganizationOverlay() {
+			this.isCreateOrganizationOverlayVisible = false;
+		},
+
+		showOrganizationDetailsOverlay(organization) {
+			this.selectedOrganizationForDetails = organization;
+			this.isOrganizationDetailsOverlayVisible = true;
+		},
+
+		hideOrganizationDetailsOverlay() {
+			this.isOrganizationDetailsOverlayVisible = false;
+			this.selectedOrganizationForDetails = null;
 		},
 
 		async createTicket(ticketData) {
@@ -101,6 +122,25 @@ export const useDashboardStore = defineStore('dashboard', {
 			} catch (error) {
 				const message = handleApiError(error);
 				console.error('Failed to create version:', message);
+			}
+		},
+
+		async createOrganization(organizationData) {
+			const authStore = useAuthStore();
+			try {
+				await $fetch('/api/organizations', {
+					method: 'POST',
+					headers: {
+						Authorization: `Bearer ${authStore.token}`,
+						'Content-Type': 'application/json',
+					},
+					body: organizationData,
+				});
+				this.hideCreateOrganizationOverlay();
+				await this.fetchOrganizations();
+			} catch (error) {
+				const message = handleApiError(error);
+				console.error('Failed to create organization:', message);
 			}
 		},
 

@@ -13,6 +13,16 @@ export default defineEventHandler(async (event) => {
     return response;
   } catch (error) {
     console.error('Error fetching organizations:', error);
+
+    // Re-throw 401 errors so the auth plugin can intercept them
+    if (error?.response?.status === 401) {
+      throw createError({
+        statusCode: 401,
+        statusMessage: 'Unauthorized'
+      });
+    }
+
+    // For other errors, return the error message
     return { error: 'Failed to fetch organizations' };
   }
 });

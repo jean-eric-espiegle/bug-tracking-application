@@ -7,5 +7,9 @@ export default defineNuxtConfig({
   css: [
     '~/assets/css/styleGuide.css'
   ],
+
+  plugins: [
+    '~/plugins/auth.client.js'
+  ],
 })
 
