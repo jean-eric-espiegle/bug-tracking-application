@@ -105,7 +105,6 @@ export const useAuthStore = defineStore('auth', {
 
 		async logout() {
 			try {
-				// Call the logout API endpoint
 				await $fetch('/api/auth/logout', {
 					method: 'POST',
 					headers: {
@@ -113,11 +112,9 @@ export const useAuthStore = defineStore('auth', {
 					}
 				});
 			} catch (error) {
-				// Even if the API call fails, we still want to clear local state
 				console.warn('Logout API call failed, but clearing local state anyway:', error);
 			}
 
-			// Clear local authentication state
 			this.user = null;
 			this.token = null;
 			this.subscriptions = [];

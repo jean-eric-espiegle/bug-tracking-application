@@ -120,7 +120,6 @@ const authStore = useAuthStore();
 const dashboardStore = useDashboardStore();
 const notificationStore = useNotificationStore();
 
-// Computed properties
 const canInviteMembers = computed(() => {
 	return (
 		organization.value?.membershipRole === 'OWNER' ||
@@ -133,7 +132,6 @@ const owner = ref(null);
 const members = ref([]);
 const loadingMembers = ref(true);
 
-// Invite form state
 const showInviteForm = ref(false);
 const isInviting = ref(false);
 const inviteForm = ref({
@@ -149,11 +147,10 @@ async function loadOrganizationData() {
 	try {
 		organization.value = {
 			...props.organization,
-			planType: 'FREE', // Default, could be enhanced to get from API
-			createdAt: new Date().toISOString(), // Default, could be enhanced
+			planType: 'FREE',
+			createdAt: new Date().toISOString(),
 		};
 
-		// Load members
 		await loadMembers();
 	} catch (error) {
 		console.error('Failed to load organization data:', error);
@@ -173,7 +170,6 @@ async function loadMembers() {
 		);
 		members.value = response;
 
-		// Find owner (assuming owner has OWNER role)
 		const ownerMember = response.find((member) => member.role === 'OWNER');
 		if (ownerMember) {
 			owner.value = ownerMember;
@@ -228,17 +224,14 @@ async function sendInvite() {
 			'success',
 		);
 
-		// Reset form and hide it
 		inviteForm.value = {
 			email: '',
 			role: 'USER',
 		};
 		showInviteForm.value = false;
 
-		// Refresh members list
 		await loadMembers();
 	} catch (error) {
-		// Error is already handled by the API route
 		console.error('Failed to send invite:', error);
 	} finally {
 		isInviting.value = false;

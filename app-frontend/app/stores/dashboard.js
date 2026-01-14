@@ -218,9 +218,9 @@ export const useDashboardStore = defineStore('dashboard', {
 				this.members = [];
 			} else {
 				this.selectedOrganizationId = organizationId;
-				this.selectedVersionId = null; // Reset selected version
+				this.selectedVersionId = null;
 				this.fetchVersions(organizationId);
-				this.fetchTickets(organizationId); // Fetch all tickets for the org
+				this.fetchTickets(organizationId);
 				this.fetchMembers();
 			}
 		},

@@ -91,7 +91,6 @@ public class VersionController {
         versionService.deleteVersion(versionId);
     }
 
-    // Helper: get the currently authenticated user
     private User getCurrentUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return userRepository.findByUsername(auth.getName())

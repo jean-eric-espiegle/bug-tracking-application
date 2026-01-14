@@ -174,7 +174,6 @@ const hasPermission = computed(() => {
 const userOrganizations = computed(() => authStore.user?.memberships || []);
 
 const availableUsers = computed(() => {
-	// Use members from dashboard store when an organization is selected
 	if (!logsStore.selectedOrganizationId) return [];
 	return dashboardStore.members || [];
 });
@@ -194,7 +193,6 @@ const actionOptions = [
 
 function formatDate(value) {
 	if (!value) return '';
-	// value is ISO string from backend; keep it simple for now
 	return new Date(value).toLocaleString();
 }
 
@@ -211,7 +209,6 @@ function toggleFilters() {
 }
 
 async function onOrganizationChange() {
-	// When organization changes, update dashboardStore and fetch members
 	const orgId = logsStore.selectedOrganizationId;
 	if (orgId) {
 		dashboardStore.selectedOrganizationId = Number(orgId);

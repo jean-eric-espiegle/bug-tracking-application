@@ -45,7 +45,6 @@ public class OrganizationService {
     public Organization createOrganization(OrganizationSignupRequest request, User user) {
         PlanType planType = request.planType();
 
-        // Check if user on free plan can create more organizations
         if (planType == PlanType.FREE) {
             long ownedOrganizations = membershipRepository.countByUserAndRole(user, Role.OWNER);
             if (ownedOrganizations > 0) {
@@ -56,13 +55,11 @@ public class OrganizationService {
         SubscriptionPlan plan = planRepository.findById(planType)
                 .orElseThrow(() -> new IllegalStateException("Plan not found"));
 
-        // 3️⃣ Create organization
         Organization organization = new Organization();
         organization.setName(request.organizationName());
 
         organizationRepository.save(organization);
 
-        // 4️⃣ Create OWNER membership
         Membership membership = new Membership();
         membership.setUser(user);
         membership.setOrganization(organization);
@@ -75,29 +72,18 @@ public class OrganizationService {
 
     @Transactional
     public Organization createOrganizationWithAutoPlan(CreateOrganizationRequest request, User user) {
-        // Check user's current organization ownership limits
         long ownedOrganizations = membershipRepository.countByUserAndRole(user, Role.OWNER);
 
-        // For now, default to FREE plan for all new organizations
-        // TODO: In the future, this could be enhanced to check user's
-        // account/subscription level and assign appropriate plans
         PlanType planType = PlanType.FREE;
-
-        // For now, allow unlimited organizations - the FREE plan restriction
-        // will be enforced at the account/user level, not organization level
-        // This allows users with existing organizations to create more
-        // (e.g., users upgrading from FREE to PRO can create additional orgs)
 
         SubscriptionPlan plan = planRepository.findById(planType)
                 .orElseThrow(() -> new IllegalStateException("Default plan not found"));
 
-        // Create organization
         Organization organization = new Organization();
         organization.setName(request.organizationName());
 
         organizationRepository.save(organization);
 
-        // Create OWNER membership
         Membership membership = new Membership();
         membership.setUser(user);
         membership.setOrganization(organization);
@@ -154,8 +140,8 @@ public class OrganizationService {
 
         Membership newOwnerMembership = findMembership(newOwner, organization);
 
-        currentOwnerMembership.setRole(Role.ADMIN); // Downgrade current owner
-        newOwnerMembership.setRole(Role.OWNER); // Upgrade new owner
+        currentOwnerMembership.setRole(Role.ADMIN);
+        newOwnerMembership.setRole(Role.OWNER);
 
         membershipRepository.save(currentOwnerMembership);
         membershipRepository.save(newOwnerMembership);
@@ -199,7 +185,6 @@ public class OrganizationService {
     public void inviteMember(Long organizationId, AddMemberByEmailRequest request, User currentUser) {
         Organization organization = getOrganizationById(organizationId);
 
-        // Check permissions
         Membership currentUserMembership = findMembership(currentUser, organization);
         if (currentUserMembership.getRole() != Role.OWNER && currentUserMembership.getRole() != Role.ADMIN) {
             throw new IllegalStateException("You do not have permission to invite members to this organization.");
@@ -207,27 +192,21 @@ public class OrganizationService {
 
         String email = request.email().toLowerCase().trim();
 
-        // Check if there's already a pending invite for this email
         if (inviteRepository.existsByInvitedEmailAndOrganizationAndStatus(email, organization, InviteStatus.PENDING)) {
             throw new IllegalStateException("An invitation has already been sent to this email address.");
         }
 
-        // Check if user with this email already exists
         Optional<User> existingUser = userRepository.findByEmail(email);
 
         if (existingUser.isPresent()) {
-            // User exists, add them directly as a member
             User newUser = existingUser.get();
 
-            // Check if they're already a member
             if (membershipRepository.existsByUserAndOrganization(newUser, organization)) {
                 throw new IllegalStateException("User is already a member of this organization.");
             }
 
-            // Check plan limits
             checkPlanLimits(organization, request.role());
 
-            // Create membership
             Membership membership = new Membership();
             membership.setUser(newUser);
             membership.setOrganization(organization);
@@ -235,13 +214,11 @@ public class OrganizationService {
 
             membershipRepository.save(membership);
         } else {
-            // User doesn't exist, create a pending invite
             OrganizationInvite invite = new OrganizationInvite(
-                organization,
-                email,
-                currentUser,
-                request.role()
-            );
+                    organization,
+                    email,
+                    currentUser,
+                    request.role());
 
             inviteRepository.save(invite);
         }
@@ -250,40 +227,31 @@ public class OrganizationService {
     @LoggableAction(action = "Deleted Organization", entity = "Organization")
     @Transactional
     public void deleteOrganization(Long organizationId, User currentUser) {
-        // Check if organization exists
         Organization organization = getOrganizationById(organizationId);
 
-        // Check if user is the owner of the organization
         Membership currentUserMembership = findMembership(currentUser, organization);
         if (currentUserMembership.getRole() != Role.OWNER) {
             throw new IllegalStateException(
-                "Only the organization owner can delete the organization. You do not have permission to delete this organization."
-            );
+                    "Only the organization owner can delete the organization. You do not have permission to delete this organization.");
         }
 
-        // Get all memberships for this organization
         List<Membership> memberships = membershipRepository.findByOrganizationId(organizationId);
 
-        // Check if there are other owners (shouldn't happen but safety check)
         long ownerCount = memberships.stream()
                 .filter(m -> m.getRole() == Role.OWNER)
                 .count();
 
         if (ownerCount > 1) {
             throw new IllegalStateException(
-                "Cannot delete organization with multiple owners. Please transfer ownership to a single owner first."
-            );
+                    "Cannot delete organization with multiple owners. Please transfer ownership to a single owner first.");
         }
 
-        // Delete all memberships first
         membershipRepository.deleteAll(memberships);
 
-        // Delete the organization
         organizationRepository.delete(organization);
     }
 
     private void checkPlanLimits(Organization organization, Role newRole) {
-        // Find the organization owner to get their subscription plan
         User owner = organization.getMemberships().stream()
                 .filter(membership -> membership.getRole() == Role.OWNER)
                 .findFirst()
@@ -292,7 +260,6 @@ public class OrganizationService {
 
         SubscriptionPlan plan = owner.getSubscriptionPlan();
         if (plan == null) {
-            // Default to FREE plan limits if user has no plan
             plan = planRepository.findById(PlanType.FREE)
                     .orElseThrow(() -> new IllegalStateException("Default FREE plan not found"));
         }

@@ -14,7 +14,6 @@ export default defineEventHandler(async (event) => {
   } catch (error) {
     console.error('Error fetching versions for organization:', error);
 
-    // Re-throw 401 errors so the auth plugin can intercept them
     if (error?.response?.status === 401) {
       throw createError({
         statusCode: 401,

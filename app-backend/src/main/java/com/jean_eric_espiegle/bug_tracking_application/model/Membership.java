@@ -24,8 +24,6 @@ public class Membership {
     @Column(nullable = false)
     private Role role;
 
-    // --- getters & setters ---
-
     public Long getId() {
         return id;
     }

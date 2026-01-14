@@ -36,7 +36,6 @@ public class UserRegistrationService {
             throw new IllegalStateException("Email already exists");
         }
 
-        // Assign default FREE subscription plan to new users
         SubscriptionPlan defaultPlan = subscriptionPlanRepository.findById(PlanType.FREE)
                 .orElseThrow(() -> new IllegalStateException("Default FREE subscription plan not found"));
 

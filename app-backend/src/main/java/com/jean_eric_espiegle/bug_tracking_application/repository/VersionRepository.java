@@ -10,9 +10,7 @@ import java.util.List;
 @Repository
 public interface VersionRepository extends JpaRepository<Version, Long> {
 
-    // Find all versions for a given organization
     List<Version> findByOrganization(Organization organization);
 
-    // Optional: find version by name and organization
     Version findByVersionNameAndOrganization(String versionName, Organization organization);
 }

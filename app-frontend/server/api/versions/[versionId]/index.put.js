@@ -16,7 +16,6 @@ export default defineEventHandler(async (event) => {
     return response;
   } catch (error) {
     console.error('Error updating version:', error);
-    // Re-throw 401 errors so the auth plugin can intercept them
     if (error?.response?.status === 401) {
       throw createError({
         statusCode: 401,

@@ -37,7 +37,6 @@ export const useLogsStore = defineStore('logs', {
 			this.loading = true;
 			try {
 				const query = new URLSearchParams();
-				// Map selected dropdowns into backend filters
 				if (this.selectedUserId)
 					query.append('userId', this.selectedUserId);
 				if (this.selectedOrganizationId)

@@ -43,14 +43,12 @@ const selectPlan = async (planType) => {
     if (planType !== 'FREE') {
         orgName = organizationName.value;
         if (!orgName) {
-            // You might want to show an error to the user here
             alert('Organization name is required for this plan.');
             return;
         }
     }
     const { success } = await subscriptionStore.selectPlan(planType, orgName);
     if (success) {
-        // Redirect to a different page after successful subscription, e.g., dashboard
         router.push('/'); 
     }
 };

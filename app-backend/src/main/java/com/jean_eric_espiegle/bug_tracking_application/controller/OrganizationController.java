@@ -35,11 +35,9 @@ public class OrganizationController {
 
     @GetMapping
     public ResponseEntity<List<OrganizationDto>> getOrganizations(Authentication authentication) {
-        // Get the logged-in user
         User user = userRepository.findByUsername(authentication.getName())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // Map Organizations to DTO with membership role
         List<OrganizationDto> orgDtos = user.getMemberships().stream()
                 .map(membership -> new OrganizationDto(
                         membership.getOrganization().getId(),

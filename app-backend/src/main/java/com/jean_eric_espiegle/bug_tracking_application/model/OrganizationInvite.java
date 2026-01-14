@@ -36,7 +36,6 @@ public class OrganizationInvite {
     private LocalDateTime acceptedAt;
     private LocalDateTime expiresAt;
 
-    // Constructors
     public OrganizationInvite() {}
 
     public OrganizationInvite(Organization organization, String invitedEmail, User invitedBy, Role invitedRole) {
@@ -44,10 +43,9 @@ public class OrganizationInvite {
         this.invitedEmail = invitedEmail;
         this.invitedBy = invitedBy;
         this.invitedRole = invitedRole;
-        this.expiresAt = LocalDateTime.now().plusDays(7); // 7 days expiry
+        this.expiresAt = LocalDateTime.now().plusDays(7);
     }
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }

@@ -31,7 +31,6 @@ public class LogAction {
 
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    // --- getters & setters ---
     public Long getId() {
         return id;
     }

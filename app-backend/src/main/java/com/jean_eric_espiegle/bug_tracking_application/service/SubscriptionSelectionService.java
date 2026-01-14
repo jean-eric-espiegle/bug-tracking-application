@@ -37,11 +37,9 @@ public class SubscriptionSelectionService {
         SubscriptionPlan plan = planRepository.findById(request.planType())
                 .orElseThrow(() -> new IllegalStateException("Plan not found"));
 
-        // Update user's account-level subscription plan
         user.setSubscriptionPlan(plan);
         userRepository.save(user);
 
-        // Create organization associated to this user (via membership only)
         Organization org = new Organization();
         if (plan.getType() == PlanType.FREE) {
             org.setName(user.getUsername() + "'s Organization");
@@ -49,13 +47,10 @@ public class SubscriptionSelectionService {
             org.setName(request.organizationName());
         }
 
-        // Save organization first to generate ID
         organizationRepository.save(org);
 
-        // Handle Enterprise plan separately
         if (plan.getType() == PlanType.ENTERPRISE) {
             org.setEnterprisePending(true);
-            // Already saved above
             return new SelectPlanResponse(
                     org.getId(),
                     org.getName(),
@@ -63,7 +58,6 @@ public class SubscriptionSelectionService {
                     "PENDING_SALES");
         }
 
-        // For non-enterprise plans, create membership
         Membership membership = new Membership();
         membership.setUser(user);
         membership.setOrganization(org);

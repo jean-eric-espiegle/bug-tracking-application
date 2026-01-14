@@ -105,9 +105,7 @@ const dashboardStore = useDashboardStore();
 const authStore = useAuthStore();
 const notificationStore = useNotificationStore();
 
-// Computed property for button disabled state
 const isCreateDisabled = computed(() => {
-	// Allow all authenticated users to create organizations
 	return false;
 });
 
@@ -126,7 +124,6 @@ function canDeleteOrganization(membershipRole) {
 }
 
 function editOrganization(org) {
-	// Show organization details overlay
 	dashboardStore.showOrganizationDetailsOverlay(org);
 }
 
@@ -144,24 +141,20 @@ async function deleteOrganization(org) {
 				},
 			});
 
-			// Show success message
 			notificationStore.showNotification(
 				`Organization "${org.name}" has been deleted successfully.`,
 				'success',
 			);
 
-			// Refresh the organizations list
 			await dashboardStore.fetchOrganizations();
 		} catch (error) {
 			console.error('Failed to delete organization:', error);
-			// Error is already handled by the API route and auth plugin
 		}
 	}
 }
 </script>
 
 <style scoped>
-/* Shared panel card style */
 .panel {
 	background-color: #ffffff;
 	border-radius: 8px;

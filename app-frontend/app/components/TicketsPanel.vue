@@ -51,7 +51,6 @@ function openTicket(ticket) {
 </script>
 
 <style scoped>
-/* Shared panel card style */
 .panel {
 	background-color: #ffffff;
 	border-radius: 8px;

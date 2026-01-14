@@ -17,7 +17,6 @@ if (isNaN(organizationId)) {
 	});
 }
 
-// Set page title
 useHead({
 	title: `Organization ${organizationId}`
 });

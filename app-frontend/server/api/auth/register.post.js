@@ -2,7 +2,6 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event);
 
   try {
-    // IMPORTANT: Replace with your actual backend URL
     const backendUrl = 'http://localhost:8080';
     const response = await $fetch(`${backendUrl}/api/auth/register`, {
       method: 'POST',
@@ -13,7 +12,6 @@ export default defineEventHandler(async (event) => {
     return response;
   } catch (error) {
     console.error('Error calling register API:', error);
-    // Forward the error from the backend
     throw createError({
       statusCode: error.statusCode || 500,
       statusMessage: error.statusMessage || 'Internal Server Error',

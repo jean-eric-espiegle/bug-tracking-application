@@ -20,8 +20,6 @@ public class Organization {
     @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Membership> memberships;
 
-    // --- getters & setters ---
-
     public Long getId() {
         return id;
     }

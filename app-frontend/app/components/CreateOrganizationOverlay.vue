@@ -42,7 +42,6 @@ const form = ref({
 
 function cancel() {
 	dashboardStore.hideCreateOrganizationOverlay();
-	// Reset form
 	form.value = {
 		organizationName: '',
 	};
@@ -69,13 +68,11 @@ async function submit() {
 			'success',
 		);
 
-		// Reset form and close overlay
 		form.value = {
 			organizationName: '',
 		};
 		dashboardStore.hideCreateOrganizationOverlay();
 	} catch (error) {
-		// Error is already handled in the dashboard store
 		console.error('Failed to create organization:', error);
 	} finally {
 		isSubmitting.value = false;

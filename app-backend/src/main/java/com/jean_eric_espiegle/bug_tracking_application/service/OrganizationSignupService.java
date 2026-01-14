@@ -30,14 +30,11 @@ public class OrganizationSignupService {
     @Transactional
     public OrganizationSignupResponse signup(Long userId, OrganizationSignupRequest request) {
 
-        // 1️⃣ Load existing user
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalStateException("User not found"));
 
-        // 2️⃣ Validate plan
         PlanType planType = request.planType();
 
-        // Check if user on free plan can create more organizations
         if (planType == PlanType.FREE) {
             long ownedOrganizations = membershipRepository.countByUserAndRole(user, Role.OWNER);
             if (ownedOrganizations > 0) {
@@ -48,13 +45,11 @@ public class OrganizationSignupService {
         SubscriptionPlan plan = planRepository.findById(planType)
                 .orElseThrow(() -> new IllegalStateException("Plan not found"));
 
-        // 3️⃣ Create organization
         Organization organization = new Organization();
         organization.setName(request.organizationName());
 
         organizationRepository.save(organization);
 
-        // 4️⃣ Create OWNER membership
         Membership membership = new Membership();
         membership.setUser(user);
         membership.setOrganization(organization);
@@ -62,7 +57,6 @@ public class OrganizationSignupService {
 
         membershipRepository.save(membership);
 
-        // 5️⃣ Response
         return new OrganizationSignupResponse(
                 organization.getId(),
                 organization.getName(),

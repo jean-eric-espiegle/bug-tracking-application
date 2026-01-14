@@ -19,7 +19,6 @@ public class EnterpriseRequest {
     @Enumerated(EnumType.STRING)
     private RequestStatus status;
 
-    // --- getters & setters ---
 
     public Long getId() {
         return id;

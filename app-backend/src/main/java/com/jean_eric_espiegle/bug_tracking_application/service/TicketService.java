@@ -39,7 +39,7 @@ public class TicketService {
         ensureSameOrganization(currentUser, organization);
 
         User reporter = userRepository.findByUsername(request.reporterUsername())
-                .orElse(currentUser); // fallback to current user if reporter not found
+                .orElse(currentUser);
 
         ensureSameOrganization(reporter, organization);
 
@@ -163,7 +163,6 @@ public class TicketService {
                 .orElseThrow(() -> new IllegalStateException("Authenticated user not found"));
     }
 
-    // Organization check helper
     private void ensureSameOrganization(User user, Organization organization) {
         if (!membershipRepository.existsByUserAndOrganization(user, organization)) {
             throw new IllegalArgumentException("Operation not allowed: user " + user.getUsername()
@@ -171,7 +170,6 @@ public class TicketService {
         }
     }
 
-    // Mapper
     private TicketResponse mapToResponse(Ticket ticket) {
         String assigneeUsername = ticket.getAssignee() != null ? ticket.getAssignee().getUsername() : null;
         String reporterUsername = ticket.getReporter() != null ? ticket.getReporter().getUsername() : null;

@@ -2,10 +2,8 @@ import { useNotificationStore } from '~/stores/notification';
 import { useAuthStore } from '~/stores/auth';
 
 export default defineNuxtPlugin(() => {
-	// Intercept all $fetch calls to handle 401 errors
 	const originalFetch = globalThis.$fetch;
 
-	// Override the global $fetch function
 	globalThis.$fetch = async (request, options = {}) => {
 		try {
 			console.log('fetching...');

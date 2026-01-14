@@ -11,18 +11,13 @@ import java.util.List;
 @Repository
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
 
-    // Find tickets by organization entity
     List<Ticket> findByOrganization(Organization organization);
 
-    // Find tickets by organization id
     List<Ticket> findByOrganizationId(Long organizationId);
 
-    // Find tickets assigned to a specific user
     List<Ticket> findByAssignee(User assignee);
 
-    // Find tickets reported by a specific user
     List<Ticket> findByReporter(User reporter);
 
-    // Find tickets by version id
     List<Ticket> findByVersionId(Long versionId);
 }

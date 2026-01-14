@@ -14,8 +14,6 @@ public class SubscriptionPlan {
     private int maxSupport;
     private int maxUsers;
 
-    // --- getters & setters ---
-
     public PlanType getType() {
         return type;
     }

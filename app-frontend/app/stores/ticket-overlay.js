@@ -38,14 +38,14 @@ export const useTicketOverlayStore = defineStore('ticketOverlay', {
 		},
 		openOverlay(ticket) {
 			this.isOverlayVisible = true;
-			this.ticket = ticket; // Show basic info while loading
-			this.fetchTicket(ticket.id); // Fetch the latest data
+			this.ticket = ticket; 
+			this.fetchTicket(ticket.id); 
 		},
 		closeOverlay() {
 			this.isOverlayVisible = false;
 			this.ticket = null;
 			this.error = null;
-			this.cancelEdit(); // Also reset editing state
+			this.cancelEdit();
 		},
 		async enterEditMode() {
 			this.isEditing = true;
@@ -55,7 +55,6 @@ export const useTicketOverlayStore = defineStore('ticketOverlay', {
 				try {
 					const authStore = useAuthStore();
 					const headers = { Authorization: `Bearer ${authStore.token}` };
-					// Fetch members
 					const membersResponse = await fetch(
 						`/api/organizations/${this.ticket.organizationId}/members`,
 						{ headers }
@@ -63,7 +62,6 @@ export const useTicketOverlayStore = defineStore('ticketOverlay', {
 					if (!membersResponse.ok) throw new Error('Failed to fetch members');
 					this.members = await membersResponse.json();
 
-					// Fetch versions
 					const versionsResponse = await fetch(
 						`/api/organizations/${this.ticket.organizationId}/versions`,
 						{ headers }
@@ -99,10 +97,9 @@ export const useTicketOverlayStore = defineStore('ticketOverlay', {
 					throw new Error('Failed to save ticket');
 				}
 
-				await this.fetchTicket(this.ticket.id); // Refresh data in overlay
-				this.cancelEdit(); // Exit edit mode
+				await this.fetchTicket(this.ticket.id);
+				this.cancelEdit();
 
-				// Refresh dashboard ticket list
 				const dashboardStore = useDashboardStore();
 				if (dashboardStore.selectedOrganizationId) {
 					await dashboardStore.fetchTickets(
@@ -128,7 +125,6 @@ export const useTicketOverlayStore = defineStore('ticketOverlay', {
 				}
 				this.closeOverlay();
 
-				// Refresh dashboard ticket list
 				const dashboardStore = useDashboardStore();
 				if (dashboardStore.selectedOrganizationId) {
 					await dashboardStore.fetchTickets(

@@ -37,11 +37,9 @@ async function handleLogout() {
 	try {
 		await authStore.logout();
 		notificationStore.showNotification('Logged out successfully', 'success');
-		// Redirect to home page
 		await navigateTo('/');
 	} catch (error) {
 		console.error('Logout failed:', error);
-		// Still show success since local state was cleared
 		notificationStore.showNotification('Logged out successfully', 'success');
 		await navigateTo('/');
 	}

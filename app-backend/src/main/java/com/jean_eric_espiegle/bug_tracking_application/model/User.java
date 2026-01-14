@@ -33,7 +33,6 @@ public class User {
     @JsonIgnore
     private List<Membership> memberships;
 
-    // --- getters / setters ---
     public Long getId() {
         return id;
     }

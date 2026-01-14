@@ -8,6 +8,5 @@ class BugTrackingApplicationTests {
 
     @Test
     void contextLoads() {
-        // just checks if Spring Boot starts successfully
     }
 }

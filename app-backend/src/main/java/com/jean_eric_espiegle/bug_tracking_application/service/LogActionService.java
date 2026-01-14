@@ -29,7 +29,6 @@ public class LogActionService {
             LocalDateTime startDate,
             LocalDateTime endDate) {
 
-        // Build JPA Specification
         Specification<LogAction> spec = Specification.where(null);
 
         if (userId != null) {
@@ -57,10 +56,8 @@ public class LogActionService {
             spec = spec.and((root, query, cb) -> cb.lessThanOrEqualTo(root.get("createdAt"), endDate));
         }
 
-        // Fetch logs sorted by creation date descending
         List<LogAction> logs = logActionRepository.findAll(spec, Sort.by(Sort.Direction.DESC, "createdAt"));
 
-        // Map entities to DTOs
         return logs.stream().map(this::mapToDto).collect(Collectors.toList());
     }
 

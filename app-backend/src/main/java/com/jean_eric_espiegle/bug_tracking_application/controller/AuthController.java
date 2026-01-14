@@ -61,7 +61,6 @@ public class AuthController {
                 user.getUsername(),
                 user.getRole().name());
 
-        // Include user's account plan
         AccountPlanDto accountPlan = null;
         if (user.getSubscriptionPlan() != null) {
             SubscriptionPlan plan = user.getSubscriptionPlan();
@@ -72,7 +71,6 @@ public class AuthController {
                     plan.getMaxUsers());
         }
 
-        // Include user's memberships with organization details
         List<MembershipDto> memberships = user.getMemberships().stream()
                 .map(membership -> new MembershipDto(
                         membership.getOrganization().getId(),
@@ -95,13 +93,6 @@ public class AuthController {
     @PostMapping("/logout")
     @LoggableAction(action = "User Logout", entity = "User")
     public ResponseEntity<Void> logout(Authentication authentication) {
-        // In a stateless JWT system, logout is primarily handled on the client side
-        // by clearing the token. However, we can optionally:
-        // 1. Log the logout event for audit purposes
-        // 2. Invalidate any server-side sessions if using sessions instead of JWT
-        // 3. Clear any server-side caches
-
-        // For now, we'll just return success and let the client handle token cleanup
         return ResponseEntity.ok().build();
     }
 }

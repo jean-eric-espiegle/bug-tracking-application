@@ -15,7 +15,6 @@ public class MemberDto {
         this.role = role;
     }
 
-    // Getters and setters
     public Long getId() {
         return id;
     }

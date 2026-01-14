@@ -31,16 +31,13 @@ public class VersionService {
             return null;
         }
         try {
-            // First, try to parse as ISO_LOCAL_DATE_TIME
             return LocalDateTime.parse(releaseDate, formatter);
         } catch (DateTimeParseException e) {
-            // If that fails, try to parse as dd-MM-yyyy and set time to start of day
             LocalDate localDate = LocalDate.parse(releaseDate, USER_DATE_FORMATTER);
             return localDate.atStartOfDay();
         }
     }
 
-    // Create a new version for an organization
     public Version createVersion(VersionRequest versionRequest, Organization organization) {
         Version version = new Version();
         version.setVersionName(versionRequest.name());
@@ -51,17 +48,14 @@ public class VersionService {
         return versionRepository.save(version);
     }
 
-    // Get all versions for an organization
     public List<Version> getVersionsForOrganization(Organization organization) {
         return versionRepository.findByOrganization(organization);
     }
 
-    // Delete a version (optional: handle tickets separately)
     public void deleteVersion(Long versionId) {
         versionRepository.deleteById(versionId);
     }
 
-    // Find version by ID
     public Version getVersionById(Long versionId) {
         return versionRepository.findById(versionId)
                 .orElseThrow(() -> new IllegalArgumentException("Version not found"));

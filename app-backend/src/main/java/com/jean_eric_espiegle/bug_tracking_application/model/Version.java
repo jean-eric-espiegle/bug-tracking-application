@@ -27,7 +27,6 @@ public class Version {
 
     private LocalDateTime releasedAt;
 
-    // --- Getters and Setters ---
     public Long getId() {
         return id;
     }
