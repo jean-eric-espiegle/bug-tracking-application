@@ -118,28 +118,36 @@
 				<div v-else-if="logsStore.logs.length === 0" class="no-results">
 					No logs found for the selected filters.
 				</div>
-				<table v-else class="logs-table">
-					<thead>
-						<tr>
-							<th>ID</th>
-							<th>User ID</th>
-							<th>Organization ID</th>
-							<th>Role</th>
-							<th>Action</th>
-							<th>Created At</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr v-for="log in logsStore.logs" :key="log.id">
-							<td>{{ log.id }}</td>
-							<td>{{ log.userId }}</td>
-							<td>{{ log.organizationId }}</td>
-							<td>{{ log.role }}</td>
-							<td>{{ log.action }}</td>
-							<td>{{ formatDate(log.createdAt) }}</td>
-						</tr>
-					</tbody>
-				</table>
+				<div class="logs-table-wrapper" v-else>
+					<table class="logs-table">
+						<thead>
+							<tr>
+								<th>ID</th>
+								<th>User</th>
+								<th>Organization</th>
+								<th>Role</th>
+								<th>Action</th>
+								<th>Created At</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr v-for="log in logsStore.logs" :key="log.id">
+								<td data-label="ID">{{ log.id }}</td>
+								<td data-label="User">
+									{{ log.username || log.userId || '-' }}
+								</td>
+								<td data-label="Organization">
+									{{ log.organizationName || log.organizationId || '-' }}
+								</td>
+								<td data-label="Role">{{ log.role }}</td>
+								<td data-label="Action">{{ log.action }}</td>
+								<td data-label="Created At">
+									{{ formatDate(log.createdAt) }}
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 			</section>
 		</div>
 	</div>
@@ -329,6 +337,11 @@ onMounted(async () => {
 	border: 1px solid #dee2e6;
 }
 
+.logs-table-wrapper {
+	width: 100%;
+	overflow-x: auto;
+}
+
 .logs-table {
 	width: 100%;
 	border-collapse: collapse;
@@ -345,6 +358,55 @@ onMounted(async () => {
 
 .logs-table th {
 	background-color: #f1f3f5;
+}
+
+/* Mobile-friendly stacked table */
+@media (max-width: 768px) {
+	.logs-table-wrapper {
+		overflow-x: visible;
+		display: flex;
+		justify-content: center;
+	}
+
+	.logs-table {
+		width: 80%;
+		max-width: 100%;
+	}
+
+	.logs-table thead {
+		display: none;
+	}
+
+	.logs-table,
+	.logs-table tbody,
+	.logs-table tr,
+	.logs-table td {
+		display: block;
+		width: 100%;
+	}
+
+	.logs-table tr {
+		margin-bottom: 12px;
+		border: 1px solid #dee2e6;
+		border-radius: 6px;
+		padding: 8px;
+		box-sizing: border-box;
+	}
+
+	.logs-table td {
+		border: none;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 4px 0;
+	}
+
+	.logs-table td::before {
+		content: attr(data-label);
+		font-weight: 600;
+		margin-right: 8px;
+		color: #495057;
+	}
 }
 
 .loading,

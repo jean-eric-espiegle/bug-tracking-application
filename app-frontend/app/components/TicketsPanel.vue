@@ -51,16 +51,29 @@ function openTicket(ticket) {
 </script>
 
 <style scoped>
+/* Shared panel card style */
+.panel {
+	background-color: #ffffff;
+	border-radius: 8px;
+	border: 1px solid #e5e7eb;
+	box-shadow: 0 2px 6px rgba(15, 23, 42, 0.06);
+	display: flex;
+	flex-direction: column;
+	padding: 10px;
+	overflow-y: auto;
+}
+
 @media (min-width: 1024px) {
 	.panel {
-		grid-column: 1/1;
-		grid-row: 2/3;
+		grid-column: 3;
+		grid-row: 2/4;
 		padding: 1rem;
 	}
 }
 
 @media (min-width: 768px) and (max-width: 1023px) {
 	.panel {
+		padding: 10px;
 		grid-row: 4;
 		grid-column: 1;
 		overflow-y: auto;
@@ -71,7 +84,6 @@ function openTicket(ticket) {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	margin-bottom: 1rem;
 }
 
 ul {
@@ -86,6 +98,10 @@ li {
 	display: flex;
 	flex-direction: row;
 	align-items: center;
+}
+
+li p {
+	margin: 0;
 }
 
 li:hover {

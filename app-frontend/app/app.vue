@@ -117,4 +117,26 @@ body {
 	grid-template-columns: 100%;
 	grid-template-rows: 100%;
 }
+
+@media (max-width: 768px) {
+	.app-header {
+		padding: 0.75rem;
+	}
+
+	.app-nav {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 0.5rem;
+	}
+
+	.nav-link,
+	.nav-link-btn {
+		margin-left: 0;
+		margin-right: 1rem;
+	}
+
+	.app-main {
+		padding: 0.75rem;
+	}
+}
 </style>

@@ -161,11 +161,24 @@ async function deleteOrganization(org) {
 </script>
 
 <style scoped>
+/* Shared panel card style */
+.panel {
+	background-color: #ffffff;
+	border-radius: 8px;
+	border: 1px solid #e5e7eb;
+	box-shadow: 0 2px 6px rgba(15, 23, 42, 0.06);
+	display: flex;
+	flex-direction: column;
+	min-height: 0;
+	padding: 10px;
+	overflow-y: auto;
+}
+
 @media (min-width: 1024px) {
 	.panel {
 		grid-row: 2/4;
-		grid-column: 3;
-		border-left: 1px solid #ccc;
+		grid-column: 1;
+		border-right: 1px solid #ccc;
 		padding: 1rem;
 	}
 }
@@ -174,7 +187,6 @@ async function deleteOrganization(org) {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	margin-bottom: 1rem;
 }
 
 .create-btn {

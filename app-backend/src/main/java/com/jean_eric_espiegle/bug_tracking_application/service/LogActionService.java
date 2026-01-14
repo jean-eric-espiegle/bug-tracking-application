@@ -67,8 +67,14 @@ public class LogActionService {
     private LogActionResponse mapToDto(LogAction logAction) {
         LogActionResponse dto = new LogActionResponse();
         dto.setId(logAction.getId());
-        dto.setUserId(logAction.getUser() != null ? logAction.getUser().getId() : null);
-        dto.setOrganizationId(logAction.getOrganization() != null ? logAction.getOrganization().getId() : null);
+        if (logAction.getUser() != null) {
+            dto.setUserId(logAction.getUser().getId());
+            dto.setUsername(logAction.getUser().getUsername());
+        }
+        if (logAction.getOrganization() != null) {
+            dto.setOrganizationId(logAction.getOrganization().getId());
+            dto.setOrganizationName(logAction.getOrganization().getName());
+        }
         dto.setRole(logAction.getRole());
         dto.setAction(logAction.getAction());
         dto.setItemSnapshot(logAction.getItemSnapshot());

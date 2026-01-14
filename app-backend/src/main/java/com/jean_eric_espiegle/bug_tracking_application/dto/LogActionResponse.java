@@ -7,7 +7,9 @@ public class LogActionResponse {
 
     private Long id;
     private Long userId;
+    private String username;
     private Long organizationId;
+    private String organizationName;
     private Role role;
     private String action;
     private String itemSnapshot;
@@ -35,6 +37,22 @@ public class LogActionResponse {
 
     public void setOrganizationId(Long organizationId) {
         this.organizationId = organizationId;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getOrganizationName() {
+        return organizationName;
+    }
+
+    public void setOrganizationName(String organizationName) {
+        this.organizationName = organizationName;
     }
 
     public Role getRole() {
