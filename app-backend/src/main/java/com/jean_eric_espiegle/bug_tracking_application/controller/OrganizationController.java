@@ -21,15 +21,12 @@ import java.util.List;
 @RequestMapping("/api/organizations")
 public class OrganizationController {
 
-    private final OrganizationSignupService signupService;
     private final UserRepository userRepository;
     private final OrganizationService organizationService;
 
     public OrganizationController(
-            OrganizationSignupService signupService,
             UserRepository userRepository,
             OrganizationService organizationService) {
-        this.signupService = signupService;
         this.userRepository = userRepository;
         this.organizationService = organizationService;
     }
@@ -65,8 +62,15 @@ public class OrganizationController {
         User user = userRepository.findByUsername(authentication.getName())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        return ResponseEntity.ok(
-                signupService.signup(user.getId(), request));
+        Organization organization = organizationService.createOrganization(request, user);
+
+        OrganizationSignupResponse response = new OrganizationSignupResponse(
+                organization.getId(),
+                organization.getName(),
+                organization.getSubscriptionPlan().getType().name(),
+                user.getUsername());
+
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/{organizationId}/transfer-ownership")

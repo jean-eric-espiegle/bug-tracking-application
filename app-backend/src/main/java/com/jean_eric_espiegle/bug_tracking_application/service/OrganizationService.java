@@ -2,9 +2,11 @@ package com.jean_eric_espiegle.bug_tracking_application.service;
 
 import com.jean_eric_espiegle.bug_tracking_application.dto.AddMemberRequest;
 import com.jean_eric_espiegle.bug_tracking_application.dto.MemberDto;
+import com.jean_eric_espiegle.bug_tracking_application.dto.OrganizationSignupRequest;
 import com.jean_eric_espiegle.bug_tracking_application.model.*;
 import com.jean_eric_espiegle.bug_tracking_application.repository.MembershipRepository;
 import com.jean_eric_espiegle.bug_tracking_application.repository.OrganizationRepository;
+import com.jean_eric_espiegle.bug_tracking_application.repository.SubscriptionPlanRepository;
 import com.jean_eric_espiegle.bug_tracking_application.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,13 +21,49 @@ public class OrganizationService {
     private final OrganizationRepository organizationRepository;
     private final MembershipRepository membershipRepository;
     private final UserRepository userRepository;
+    private final SubscriptionPlanRepository planRepository;
 
     public OrganizationService(OrganizationRepository organizationRepository, MembershipRepository membershipRepository,
-            UserRepository userRepository) {
+            UserRepository userRepository, SubscriptionPlanRepository planRepository) {
         this.organizationRepository = organizationRepository;
         this.membershipRepository = membershipRepository;
         this.userRepository = userRepository;
+        this.planRepository = planRepository;
     }
+
+    @Transactional
+    public Organization createOrganization(OrganizationSignupRequest request, User user) {
+        PlanType planType = request.planType();
+
+        // Check if user on free plan can create more organizations
+        if (planType == PlanType.FREE) {
+            long ownedOrganizations = membershipRepository.countByUserAndRole(user, Role.OWNER);
+            if (ownedOrganizations > 0) {
+                throw new IllegalStateException("Users on the FREE plan can only own one organization.");
+            }
+        }
+
+        SubscriptionPlan plan = planRepository.findById(planType)
+                .orElseThrow(() -> new IllegalStateException("Plan not found"));
+
+        // 3️⃣ Create organization
+        Organization organization = new Organization();
+        organization.setName(request.organizationName());
+        organization.setSubscriptionPlan(plan);
+
+        organizationRepository.save(organization);
+
+        // 4️⃣ Create OWNER membership
+        Membership membership = new Membership();
+        membership.setUser(user);
+        membership.setOrganization(organization);
+        membership.setRole(Role.OWNER);
+
+        membershipRepository.save(membership);
+
+        return organization;
+    }
+
 
     public List<MemberDto> getMembers(Long organizationId, String searchTerm) {
         List<Membership> memberships;
@@ -44,13 +82,6 @@ public class OrganizationService {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Fetch an organization by its ID
-     * 
-     * @param id the organization ID
-     * @return Organization entity
-     * @throws IllegalStateException if not found
-     */
     public Organization getOrganizationById(Long id) {
         return organizationRepository.findById(id)
                 .orElseThrow(() -> new IllegalStateException("Organization not found with ID: " + id));
@@ -97,26 +128,20 @@ public class OrganizationService {
     public void addMember(Long organizationId, AddMemberRequest request, User currentUser) {
         Organization organization = getOrganizationById(organizationId);
 
-        // 1. Check if current user has permission to add members (e.g., is OWNER or
-        // ADMIN)
         Membership currentUserMembership = findMembership(currentUser, organization);
         if (currentUserMembership.getRole() != Role.OWNER && currentUserMembership.getRole() != Role.ADMIN) {
             throw new IllegalStateException("You do not have permission to add members to this organization.");
         }
 
-        // 2. Check if the new user exists
         User newUser = userRepository.findByUsername(request.username())
                 .orElseThrow(() -> new IllegalStateException("User not found: " + request.username()));
 
-        // 3. Check if the user is already a member
         if (membershipRepository.existsByUserAndOrganization(newUser, organization)) {
             throw new IllegalStateException("User is already a member of this organization.");
         }
 
-        // 4. Check plan limits
         checkPlanLimits(organization, request.role());
 
-        // 5. Create new membership
         Membership newMembership = new Membership();
         newMembership.setUser(newUser);
         newMembership.setOrganization(organization);
